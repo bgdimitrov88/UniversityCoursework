@@ -34,6 +34,11 @@ public class ImageLabeller extends JFrame {
 	JPanel toolboxPanel = null;
 	
 	/**
+	 * imgbox - put all buttons and stuff here!
+	 */
+	JPanel imgboxPanel = null;
+	
+	/**
 	 * image panel - displays image and editing area
 	 */
 	ImagePanel imagePanel = null;
@@ -79,29 +84,132 @@ public class ImageLabeller extends JFrame {
 
         //create toolbox panel
         toolboxPanel = new JPanel();
+        //create imgbox panel
+        imgboxPanel = new JPanel();
         
-        //Add button
-		JButton newPolyButton = new JButton("New object");
-		newPolyButton.setMnemonic(KeyEvent.VK_N);
-		newPolyButton.setSize(50, 20);
-		newPolyButton.setEnabled(true);
-		newPolyButton.addActionListener(new ActionListener() {
+        //Add Add button
+		JButton newAddButton = new JButton("Add");
+		newAddButton.setMnemonic(KeyEvent.VK_N);
+		newAddButton.setSize(50, 20);
+		newAddButton.setEnabled(true);
+		newAddButton.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 			    	addNewPolygon();
 			}
 		});
-		newPolyButton.setToolTipText("Click to add new object");
+		newAddButton.setToolTipText("Click to Add labels");
+        
+        //Add Edit button
+		JButton newEditButton = new JButton("Edit");
+		newEditButton.setMnemonic(KeyEvent.VK_N);
+		newEditButton.setSize(50, 20);
+		newEditButton.setEnabled(true);
+		newEditButton.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+			    	addNewPolygon();
+			}
+		});
+		newEditButton.setToolTipText("Click to edit the selected label");
 		
-		toolboxPanel.add(newPolyButton);
+        //Add Delete button
+		JButton newDeleteButton = new JButton("Delete");
+		newDeleteButton.setMnemonic(KeyEvent.VK_N);
+		newDeleteButton.setSize(50, 20);
+		newDeleteButton.setEnabled(true);
+		newDeleteButton.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+			    	addNewPolygon();
+			}
+		});
+		newDeleteButton.setToolTipText("Click to delete the selected labels");
+		
+		
+        //Add Save button
+		JButton newSaveButton = new JButton("Save");
+		newSaveButton.setMnemonic(KeyEvent.VK_N);
+		newSaveButton.setSize(50, 20);
+		newSaveButton.setEnabled(true);
+		newSaveButton.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+			    	addNewPolygon();
+			}
+		});
+		newSaveButton.setToolTipText("Click to save the current labels");
+		
+        //Add Load button
+		JButton newLoadButton = new JButton("Load");
+		newLoadButton.setMnemonic(KeyEvent.VK_N);
+		newLoadButton.setSize(50, 20);
+		newLoadButton.setEnabled(true);
+		newLoadButton.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+			    	addNewPolygon();
+			}
+		});
+		newLoadButton.setToolTipText("Click to load labels");
+		
+        //Add Chose Image button
+		JButton newChoseButton = new JButton("Img Name");
+		newChoseButton.setMnemonic(KeyEvent.VK_N);
+		newChoseButton.setSize(50, 20);
+		newChoseButton.setEnabled(true);
+		newChoseButton.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+			    	addNewPolygon();
+			}
+		});
+		newChoseButton.setToolTipText("Click to Select Image");
+		
+        //Add Chose Close button
+		JButton newCloseButton = new JButton("X");
+		newCloseButton.setMnemonic(KeyEvent.VK_N);
+		newCloseButton.setSize(50, 20);
+		newCloseButton.setEnabled(true);
+		newCloseButton.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+			    	addNewPolygon();
+			}
+		});
+		newCloseButton.setToolTipText("Click to Close Image");
+		
+        //Add Open Close button
+		JButton newOpenButton = new JButton("+");
+		newOpenButton.setMnemonic(KeyEvent.VK_N);
+		newOpenButton.setSize(50, 20);
+		newOpenButton.setEnabled(true);
+		newOpenButton.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+			    	addNewPolygon();
+			}
+		});
+		newOpenButton.setToolTipText("Click to Open Image");
+		
+		imgboxPanel.add(newOpenButton);
+		imgboxPanel.add(newCloseButton);
+		imgboxPanel.add(newChoseButton);
+		toolboxPanel.add(newAddButton);
+		toolboxPanel.add(newEditButton);
+		toolboxPanel.add(newDeleteButton);
+		toolboxPanel.add(newLoadButton);
+		toolboxPanel.add(newSaveButton);
 		
 		//add toolbox to window
 		appPanel.add(toolboxPanel);
-		
+		appPanel.add(imgboxPanel);
 		//display all the stuff
 		this.pack();
         this.setVisible(true);
 	}
+	
+	
 	
 	/**
 	 * Runs the program
