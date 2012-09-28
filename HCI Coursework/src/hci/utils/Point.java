@@ -5,7 +5,7 @@ package hci.utils;
  * @author Michal
  *
  */
-//test
+//test2
 public class Point {
 	private int x = 0;
 	private int y = 0;
