@@ -86,18 +86,16 @@ public class ImageLabeller extends JFrame {
         toolboxPanel = new JPanel();
         //create imgbox panel
         imgboxPanel = new JPanel();
+        imgboxPanel.setSize(100, 500);
+        imgboxPanel.setVisible(true);
+        //imgboxPanel.setBounds(500, 500, 50, 50);
+       
         
         //Add Add button
 		JButton newAddButton = new JButton("Add");
 		newAddButton.setMnemonic(KeyEvent.VK_N);
 		newAddButton.setSize(50, 20);
 		newAddButton.setEnabled(true);
-		newAddButton.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-			    	addNewPolygon();
-			}
-		});
 		newAddButton.setToolTipText("Click to Add labels");
         
         //Add Edit button
@@ -105,12 +103,6 @@ public class ImageLabeller extends JFrame {
 		newEditButton.setMnemonic(KeyEvent.VK_N);
 		newEditButton.setSize(50, 20);
 		newEditButton.setEnabled(true);
-		newEditButton.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-			    	addNewPolygon();
-			}
-		});
 		newEditButton.setToolTipText("Click to edit the selected label");
 		
         //Add Delete button
@@ -118,12 +110,6 @@ public class ImageLabeller extends JFrame {
 		newDeleteButton.setMnemonic(KeyEvent.VK_N);
 		newDeleteButton.setSize(50, 20);
 		newDeleteButton.setEnabled(true);
-		newDeleteButton.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-			    	addNewPolygon();
-			}
-		});
 		newDeleteButton.setToolTipText("Click to delete the selected labels");
 		
 		
@@ -132,12 +118,6 @@ public class ImageLabeller extends JFrame {
 		newSaveButton.setMnemonic(KeyEvent.VK_N);
 		newSaveButton.setSize(50, 20);
 		newSaveButton.setEnabled(true);
-		newSaveButton.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-			    	addNewPolygon();
-			}
-		});
 		newSaveButton.setToolTipText("Click to save the current labels");
 		
         //Add Load button
@@ -145,12 +125,6 @@ public class ImageLabeller extends JFrame {
 		newLoadButton.setMnemonic(KeyEvent.VK_N);
 		newLoadButton.setSize(50, 20);
 		newLoadButton.setEnabled(true);
-		newLoadButton.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-			    	addNewPolygon();
-			}
-		});
 		newLoadButton.setToolTipText("Click to load labels");
 		
         //Add Chose Image button
@@ -158,12 +132,6 @@ public class ImageLabeller extends JFrame {
 		newChoseButton.setMnemonic(KeyEvent.VK_N);
 		newChoseButton.setSize(50, 20);
 		newChoseButton.setEnabled(true);
-		newChoseButton.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-			    	addNewPolygon();
-			}
-		});
 		newChoseButton.setToolTipText("Click to Select Image");
 		
         //Add Chose Close button
@@ -171,12 +139,6 @@ public class ImageLabeller extends JFrame {
 		newCloseButton.setMnemonic(KeyEvent.VK_N);
 		newCloseButton.setSize(50, 20);
 		newCloseButton.setEnabled(true);
-		newCloseButton.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-			    	addNewPolygon();
-			}
-		});
 		newCloseButton.setToolTipText("Click to Close Image");
 		
         //Add Open Close button
