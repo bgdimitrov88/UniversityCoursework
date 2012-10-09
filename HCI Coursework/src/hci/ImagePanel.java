@@ -8,8 +8,10 @@ import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Image;
+import java.awt.RenderingHints;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
+import java.awt.event.MouseMotionListener;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.util.ArrayList;
@@ -21,7 +23,7 @@ import hci.utils.*;
  * @author Michal
  *
  */
-public class ImagePanel extends JPanel implements MouseListener {
+public class ImagePanel extends JPanel implements MouseListener, MouseMotionListener {
 	/**
 	 * some java stuff to get rid of warnings
 	 */
@@ -43,6 +45,18 @@ public class ImagePanel extends JPanel implements MouseListener {
 	ArrayList<ArrayList<Point>> polygonsList = null;
 	
 	/**
+	 * Flag showing if a control point is being selected
+	 */
+	
+	boolean isPointSelected = false;
+	
+	/**
+	 * Nearest point index
+	 */
+	
+	int pointIndex = -1;
+	
+	/**
 	 * default constructor, sets up the window properties
 	 */
 	public ImagePanel() {
@@ -58,6 +72,7 @@ public class ImagePanel extends JPanel implements MouseListener {
 		this.setMaximumSize(panelSize);
 		
 		addMouseListener(this);
+		addMouseMotionListener(this);
 	}
 	
 	/**
@@ -92,6 +107,7 @@ public class ImagePanel extends JPanel implements MouseListener {
 	
 	@Override
 	public void paint(Graphics g) {
+		
 		super.paint(g);
 		
 		//display iamge
@@ -113,6 +129,7 @@ public class ImagePanel extends JPanel implements MouseListener {
 	 */
 	public void drawPolygon(ArrayList<Point> polygon) {
 		Graphics2D g = (Graphics2D)this.getGraphics();
+		g.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
 		g.setColor(Color.GREEN);
 		for(int i = 0; i < polygon.size(); i++) {
 			Point currentVertex = polygon.get(i);
@@ -135,6 +152,7 @@ public class ImagePanel extends JPanel implements MouseListener {
 			Point lastVertex = polygon.get(polygon.size() - 1);
 		
 			Graphics2D g = (Graphics2D)this.getGraphics();
+			g.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
 			g.setColor(Color.GREEN);
 			g.drawLine(firstVertex.getX(), firstVertex.getY(), lastVertex.getX(), lastVertex.getY());
 		}
@@ -155,29 +173,6 @@ public class ImagePanel extends JPanel implements MouseListener {
 
 	@Override
 	public void mouseClicked(MouseEvent e) {
-		int x = e.getX();
-		int y = e.getY();
-		
-		//check if the cursos withing image area
-		if (x > image.getWidth() || y > image.getHeight()) {
-			//if not do nothing
-			return;
-		}
-		
-		Graphics2D g = (Graphics2D)this.getGraphics();
-		
-		//if the left button than we will add a vertex to poly
-		if (e.getButton() == MouseEvent.BUTTON1) {
-			g.setColor(Color.GREEN);
-			if (currentPolygon.size() != 0) {
-				Point lastVertex = currentPolygon.get(currentPolygon.size() - 1);
-				g.drawLine(lastVertex.getX(), lastVertex.getY(), x, y);
-			}
-			g.fillOval(x-5,y-5,10,10);
-			
-			currentPolygon.add(new Point(x,y));
-			System.out.println(x + " " + y);
-		} 
 	}
 
 	@Override
@@ -190,10 +185,108 @@ public class ImagePanel extends JPanel implements MouseListener {
 
 	@Override
 	public void mousePressed(MouseEvent arg0) {
+		int x = arg0.getX();
+		int y = arg0.getY();
+		
+		//check if the cursor is within image area
+		if (x > image.getWidth() || y > image.getHeight()) {
+			//if not do nothing
+			return;
+		}
+		
+		Point p = new Point(arg0.getX(), arg0.getY());
+		
+		pointIndex = getNearestControlPoint(p);
+		
+		//if pressed on an existing point
+		if(pointIndex >= 0 && currentPolygon.size() > 0){
+			isPointSelected = true;
+		}
+		
+		//if drawing a new point
+		else {
+			
+			Graphics2D g = (Graphics2D)this.getGraphics();
+			g.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);		
+			
+			//if the left button than we will add a vertex to poly
+			if (arg0.getButton() == MouseEvent.BUTTON1) {
+				g.setColor(Color.GREEN);
+				if (currentPolygon.size() != 0) {
+					Point lastVertex = currentPolygon.get(currentPolygon.size() - 1);
+					g.drawLine(lastVertex.getX(), lastVertex.getY(), x, y);
+				}
+				g.fillOval(x-5,y-5,10,10);
+				
+				currentPolygon.add(new Point(x,y));
+				System.out.println(x + " " + y);
+			}
+			ShowImage();
+			drawPolygon(currentPolygon);
+		}
 	}
 
 	@Override
 	public void mouseReleased(MouseEvent arg0) {
+		isPointSelected = false;
 	}
 	
+
+	@Override
+	public void mouseMoved(MouseEvent arg0) {
+		//Point p = new Point(arg0.getX(), arg0.getY());
+		//pointIndex = getNearestControlPoint(p);
+	}
+	
+	@Override
+	public void mouseDragged(MouseEvent arg0){
+		Point p = null;
+		
+		int x = arg0.getX();
+		int y = arg0.getY();
+		
+		//if dragging an existing point
+		if (isPointSelected) {
+			if(arg0.getX() > image.getWidth() || arg0.getX() < 0)
+				x = currentPolygon.get(pointIndex).getX();
+			
+			if(arg0.getY() > image.getHeight() || arg0.getY() < 0)
+				y = currentPolygon.get(pointIndex).getY();
+			
+			p = new Point(x,y);
+			
+        	currentPolygon.set(pointIndex, p);
+        }
+		//if dragging a newly added point (mouse button has not been released yet)
+		else{
+			if(arg0.getX() > image.getWidth() || arg0.getX() < 0)
+				x = currentPolygon.get(currentPolygon.size()-1).getX();
+			
+			if(arg0.getY() > image.getHeight() || arg0.getY() < 0)
+				y = currentPolygon.get(currentPolygon.size()-1).getY();
+			
+			p = new Point(x,y);
+			
+			currentPolygon.set(currentPolygon.size()-1, p);
+		}
+		
+		ShowImage();
+		drawPolygon(currentPolygon);
+	}
+	
+	public int getNearestControlPoint(Point p) {
+		int radius = 5;
+        double best = (radius << 3) + 1;
+        int bestInd = -1;
+        for (int i = 0; i < currentPolygon.size(); i++) {
+            int diffX = p.getX() - currentPolygon.get(i).getX();
+            int diffY = p.getY() - currentPolygon.get(i).getY();
+            double diff = diffX * diffX + diffY * diffY;
+            if (best >= diff) {
+                best = diff;
+                bestInd = i;
+            }
+        }
+        return bestInd;
+    }	
 }
