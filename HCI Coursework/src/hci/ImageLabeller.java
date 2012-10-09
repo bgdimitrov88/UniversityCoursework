@@ -2,7 +2,10 @@ package hci;
 
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
+import javax.swing.JComboBox;
 import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JList;
 import javax.swing.JPanel;
 
 import java.awt.Graphics;
@@ -29,11 +32,16 @@ public class ImageLabeller extends JFrame {
 	 * main window panel
 	 */
 	JPanel appPanel = null;
+	JLabel helpLabel =null;
+	JLabel pointLabel  =null;
+	JList labelList  =null;
 	
 	/**
 	 * toolbox - put all buttons and stuff here!
 	 */
 	JPanel toolboxPanel = null;
+	JPanel rightPanel = null;
+
 	
 	/**
 	 * imgbox - put all buttons and stuff here!
@@ -75,8 +83,10 @@ public class ImageLabeller extends JFrame {
 
 		//setup main window panel
 		appPanel = new JPanel();
-
-
+		helpLabel = new JLabel("Put Help Here");
+		pointLabel = new JLabel("X,Y of mouse");
+		String[] anArray= {"1", "2", "3", "4","1", "2", "3", "4","1", "2", "3", "4","1", "2", "3", "4","1"};
+		labelList = new JList(anArray);
 
 		this.setLayout(new BoxLayout(appPanel, BoxLayout.X_AXIS));
 		this.setContentPane(appPanel);
@@ -90,6 +100,7 @@ public class ImageLabeller extends JFrame {
         toolboxPanel = new JPanel();
         //create imgbox panel
         imgboxPanel = new JPanel();
+        rightPanel = new JPanel();
 
        
         
@@ -130,24 +141,25 @@ public class ImageLabeller extends JFrame {
 		newLoadButton.setToolTipText("Click to load labels");
 		
         //Add Open Close button
-		JButton newOpenButton = new JButton("+");
+		JButton newOpenButton = new JButton("Add to list");
 		newOpenButton.setMnemonic(KeyEvent.VK_N);
 		newOpenButton.setSize(50, 20);
 		newOpenButton.setEnabled(true);
 		
         //Add Chose Close button
-		JButton newCloseButton = new JButton("X");
+		JButton newCloseButton = new JButton("Remove from list");
 		newCloseButton.setMnemonic(KeyEvent.VK_N);
 		newCloseButton.setSize(50, 20);
 		newCloseButton.setEnabled(true);
+
+
 		newCloseButton.setToolTipText("Click to Close Image");
 		
         //Add Chose Image button
-		JButton newChoseButton = new JButton("Img Name");
-		newChoseButton.setMnemonic(KeyEvent.VK_N);
-		newChoseButton.setSize(50, 20);
+		JComboBox newChoseButton = new JComboBox();
+		newChoseButton.setSize(100, 20);
 		newChoseButton.setEnabled(true);
-		newChoseButton.setToolTipText("Click to Select Image");
+		newChoseButton.setToolTipText("Chose From Images");
 		
 		
 		
@@ -160,19 +172,19 @@ public class ImageLabeller extends JFrame {
 		newOpenButton.setToolTipText("Click to Open Image");
 		imgboxPanel.setLayout(new GridLayout(0,3));
 		imgboxPanel.add(newChoseButton);
-		imgboxPanel.add(newCloseButton);
 		imgboxPanel.add(newOpenButton);
+		imgboxPanel.add(newCloseButton);
 		toolboxPanel.setLayout(new GridLayout(5,0));
 		toolboxPanel.add(newAddButton);
 		toolboxPanel.add(newEditButton);
 		toolboxPanel.add(newDeleteButton);
 		toolboxPanel.add(newLoadButton);
 		toolboxPanel.add(newSaveButton);
+		rightPanel.setLayout(new GridLayout(2,0));
+		rightPanel.add(labelList);
+		rightPanel.add(toolboxPanel);
 		
-		//add toolbox to window
-        //appPanel.add(imagePanel);
-		//appPanel.add(imgboxPanel);
-		//appPanel.add(toolboxPanel);
+
 		
 		appPanel.setLayout(new GridBagLayout());
 		GridBagConstraints gridBag = new GridBagConstraints();
@@ -180,7 +192,7 @@ public class ImageLabeller extends JFrame {
 		gridBag.weightx = 0.5;
 		gridBag.gridx = 3;
 		gridBag.gridy = 1;
-		appPanel.add(toolboxPanel, gridBag);
+		appPanel.add(rightPanel, gridBag);
 		
 		gridBag.fill = GridBagConstraints.HORIZONTAL;
 		gridBag.weightx = 0.5;
@@ -189,13 +201,23 @@ public class ImageLabeller extends JFrame {
 		appPanel.add(imgboxPanel, gridBag);
 		
 		gridBag.fill = GridBagConstraints.HORIZONTAL;
-		gridBag.ipady = 40;
-		gridBag.weightx = 0.0;
 		gridBag.gridwidth = 3;
 		gridBag.gridx = 0;
 		gridBag.gridy = 1;
 		appPanel.add(imagePanel, gridBag);
 
+		gridBag.fill = GridBagConstraints.HORIZONTAL;
+		gridBag.weightx = 0.5;
+		gridBag.gridx = 1;
+		gridBag.gridy = 2;
+		appPanel.add(helpLabel, gridBag);
+		
+		gridBag.fill = GridBagConstraints.HORIZONTAL;
+		gridBag.weightx = 0.5;
+		gridBag.gridx = 3;
+		gridBag.gridy = 2;
+		appPanel.add(pointLabel, gridBag);
+		
 		
 		//display all the stuff
 		this.pack();
