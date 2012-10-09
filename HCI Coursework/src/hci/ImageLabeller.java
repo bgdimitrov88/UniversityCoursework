@@ -6,6 +6,9 @@ import javax.swing.JFrame;
 import javax.swing.JPanel;
 
 import java.awt.Graphics;
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
+import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
@@ -22,7 +25,6 @@ public class ImageLabeller extends JFrame {
 	 * some java stuff to get rid of warnings
 	 */
 	private static final long serialVersionUID = 1L;
-	
 	/**
 	 * main window panel
 	 */
@@ -73,6 +75,9 @@ public class ImageLabeller extends JFrame {
 
 		//setup main window panel
 		appPanel = new JPanel();
+
+
+
 		this.setLayout(new BoxLayout(appPanel, BoxLayout.X_AXIS));
 		this.setContentPane(appPanel);
 		
@@ -80,15 +85,12 @@ public class ImageLabeller extends JFrame {
 		imagePanel = new ImagePanel(imageFilename);
 		imagePanel.setOpaque(true); //content panes must be opaque
 		
-        appPanel.add(imagePanel);
 
         //create toolbox panel
         toolboxPanel = new JPanel();
         //create imgbox panel
         imgboxPanel = new JPanel();
-        imgboxPanel.setSize(100, 500);
-        imgboxPanel.setVisible(true);
-        //imgboxPanel.setBounds(500, 500, 50, 50);
+
        
         
         //Add Add button
@@ -97,7 +99,7 @@ public class ImageLabeller extends JFrame {
 		newAddButton.setSize(50, 20);
 		newAddButton.setEnabled(true);
 		newAddButton.setToolTipText("Click to Add labels");
-        
+		
         //Add Edit button
 		JButton newEditButton = new JButton("Edit");
 		newEditButton.setMnemonic(KeyEvent.VK_N);
@@ -127,12 +129,11 @@ public class ImageLabeller extends JFrame {
 		newLoadButton.setEnabled(true);
 		newLoadButton.setToolTipText("Click to load labels");
 		
-        //Add Chose Image button
-		JButton newChoseButton = new JButton("Img Name");
-		newChoseButton.setMnemonic(KeyEvent.VK_N);
-		newChoseButton.setSize(50, 20);
-		newChoseButton.setEnabled(true);
-		newChoseButton.setToolTipText("Click to Select Image");
+        //Add Open Close button
+		JButton newOpenButton = new JButton("+");
+		newOpenButton.setMnemonic(KeyEvent.VK_N);
+		newOpenButton.setSize(50, 20);
+		newOpenButton.setEnabled(true);
 		
         //Add Chose Close button
 		JButton newCloseButton = new JButton("X");
@@ -141,11 +142,15 @@ public class ImageLabeller extends JFrame {
 		newCloseButton.setEnabled(true);
 		newCloseButton.setToolTipText("Click to Close Image");
 		
-        //Add Open Close button
-		JButton newOpenButton = new JButton("+");
-		newOpenButton.setMnemonic(KeyEvent.VK_N);
-		newOpenButton.setSize(50, 20);
-		newOpenButton.setEnabled(true);
+        //Add Chose Image button
+		JButton newChoseButton = new JButton("Img Name");
+		newChoseButton.setMnemonic(KeyEvent.VK_N);
+		newChoseButton.setSize(50, 20);
+		newChoseButton.setEnabled(true);
+		newChoseButton.setToolTipText("Click to Select Image");
+		
+		
+		
 		newOpenButton.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
@@ -153,10 +158,11 @@ public class ImageLabeller extends JFrame {
 			}
 		});
 		newOpenButton.setToolTipText("Click to Open Image");
-		
-		imgboxPanel.add(newOpenButton);
-		imgboxPanel.add(newCloseButton);
+		imgboxPanel.setLayout(new GridLayout(0,3));
 		imgboxPanel.add(newChoseButton);
+		imgboxPanel.add(newCloseButton);
+		imgboxPanel.add(newOpenButton);
+		toolboxPanel.setLayout(new GridLayout(5,0));
 		toolboxPanel.add(newAddButton);
 		toolboxPanel.add(newEditButton);
 		toolboxPanel.add(newDeleteButton);
@@ -164,8 +170,33 @@ public class ImageLabeller extends JFrame {
 		toolboxPanel.add(newSaveButton);
 		
 		//add toolbox to window
-		appPanel.add(toolboxPanel);
-		appPanel.add(imgboxPanel);
+        //appPanel.add(imagePanel);
+		//appPanel.add(imgboxPanel);
+		//appPanel.add(toolboxPanel);
+		
+		appPanel.setLayout(new GridBagLayout());
+		GridBagConstraints gridBag = new GridBagConstraints();
+		gridBag.fill = GridBagConstraints.HORIZONTAL;
+		gridBag.weightx = 0.5;
+		gridBag.gridx = 3;
+		gridBag.gridy = 1;
+		appPanel.add(toolboxPanel, gridBag);
+		
+		gridBag.fill = GridBagConstraints.HORIZONTAL;
+		gridBag.weightx = 0.5;
+		gridBag.gridx = 2;
+		gridBag.gridy = 0;
+		appPanel.add(imgboxPanel, gridBag);
+		
+		gridBag.fill = GridBagConstraints.HORIZONTAL;
+		gridBag.ipady = 40;
+		gridBag.weightx = 0.0;
+		gridBag.gridwidth = 3;
+		gridBag.gridx = 0;
+		gridBag.gridy = 1;
+		appPanel.add(imagePanel, gridBag);
+
+		
 		//display all the stuff
 		this.pack();
         this.setVisible(true);
