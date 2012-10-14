@@ -1,10 +1,15 @@
 package hci;
 
 import javax.imageio.ImageIO;
+import javax.swing.JComponent;
+import javax.swing.JDialog;
+import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 
 import java.awt.Color;
 import java.awt.Dimension;
+import java.awt.Frame;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Image;
@@ -15,6 +20,8 @@ import java.awt.event.MouseMotionListener;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
 import hci.utils.*;
 
@@ -42,7 +49,7 @@ public class ImagePanel extends JPanel implements MouseListener, MouseMotionList
 	/**
 	 * list of polygons
 	 */
-	ArrayList<ArrayList<Point>> polygonsList = null;
+	Map<String,ArrayList<Point>> polygonsList = null;
 	
 	/**
 	 * Flag showing if a control point is being selected
@@ -56,12 +63,15 @@ public class ImagePanel extends JPanel implements MouseListener, MouseMotionList
 	
 	int pointIndex = -1;
 	
+	ImageLabeller parent = null;
+	
 	/**
 	 * default constructor, sets up the window properties
 	 */
-	public ImagePanel() {
+	public ImagePanel(ImageLabeller parent) {
+		this.parent = parent;
 		currentPolygon = new ArrayList<Point>();
-		polygonsList = new ArrayList<ArrayList<Point>>();
+		polygonsList = new HashMap<String,ArrayList<Point>>();
 
 		this.setVisible(true);
 
@@ -80,8 +90,8 @@ public class ImagePanel extends JPanel implements MouseListener, MouseMotionList
 	 * @param imageName - path to image
 	 * @throws Exception if error loading the image
 	 */
-	public ImagePanel(String imageName) throws Exception{
-		this();
+	public ImagePanel(ImageLabeller parent, String imageName) throws Exception{
+		this(parent);
 		image = ImageIO.read(new File(imageName));
 		if (image.getWidth() > 800 || image.getHeight() > 600) {
 			int newWidth = image.getWidth() > 800 ? 800 : (image.getWidth() * 600)/image.getHeight();
@@ -114,7 +124,7 @@ public class ImagePanel extends JPanel implements MouseListener, MouseMotionList
 		ShowImage();
 		
 		//display all the completed polygons
-		for(ArrayList<Point> polygon : polygonsList) {
+		for(ArrayList<Point> polygon : polygonsList.values()) {
 			drawPolygon(polygon);
 			finishPolygon(polygon);
 		}
@@ -165,7 +175,7 @@ public class ImagePanel extends JPanel implements MouseListener, MouseMotionList
 		//finish the current polygon if any
 		if (currentPolygon != null ) {
 			finishPolygon(currentPolygon);
-			polygonsList.add(currentPolygon);
+			polygonsList.put(null, currentPolygon);
 		}
 		
 		currentPolygon = new ArrayList<Point>();
@@ -173,6 +183,20 @@ public class ImagePanel extends JPanel implements MouseListener, MouseMotionList
 
 	@Override
 	public void mouseClicked(MouseEvent e) {
+		if (e.getButton() == MouseEvent.BUTTON3) {
+			finishPolygon(currentPolygon);
+			currentPolygon = new ArrayList<Point>();
+			
+			String polygonName = JOptionPane.showInputDialog(this.getParent(),
+					"Enter polygon name",
+					null,
+					JOptionPane.PLAIN_MESSAGE);
+
+			polygonsList.put(polygonName, currentPolygon);
+			int insertPosition = parent.listModel.getSize();
+			parent.listModel.add(insertPosition, polygonName);
+			//parent.repaint();
+		}
 	}
 
 	@Override
@@ -222,6 +246,10 @@ public class ImagePanel extends JPanel implements MouseListener, MouseMotionList
 				System.out.println(x + " " + y);
 			}
 			ShowImage();
+			/*for(ArrayList<Point> polygon : polygonsList.values()) {
+				drawPolygon(polygon);
+				finishPolygon(polygon);
+			}*/
 			drawPolygon(currentPolygon);
 		}
 	}

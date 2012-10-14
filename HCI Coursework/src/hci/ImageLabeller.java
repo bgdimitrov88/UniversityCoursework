@@ -1,6 +1,7 @@
 package hci;
 
 import javax.swing.BoxLayout;
+import javax.swing.DefaultListModel;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JFrame;
@@ -35,6 +36,7 @@ public class ImageLabeller extends JFrame {
 	JLabel helpLabel =null;
 	JLabel pointLabel  =null;
 	JList labelList  =null;
+	DefaultListModel listModel = null;
 	
 	/**
 	 * toolbox - put all buttons and stuff here!
@@ -85,14 +87,15 @@ public class ImageLabeller extends JFrame {
 		appPanel = new JPanel();
 		helpLabel = new JLabel("Put Help Here");
 		pointLabel = new JLabel("X,Y of mouse");
-		String[] anArray= {"1", "2", "3", "4","1", "2", "3", "4","1", "2", "3", "4","1", "2", "3", "4","1"};
-		labelList = new JList(anArray);
+		//String[] anArray= {"1", "2", "3", "4","1", "2", "3", "4","1", "2", "3", "4","1", "2", "3", "4","1"};
+		listModel = new DefaultListModel();
+		labelList = new JList(listModel);
 
 		this.setLayout(new BoxLayout(appPanel, BoxLayout.X_AXIS));
 		this.setContentPane(appPanel);
 		
         //Create and set up the image panel.
-		imagePanel = new ImagePanel(imageFilename);
+		imagePanel = new ImagePanel(this, imageFilename);
 		imagePanel.setOpaque(true); //content panes must be opaque
 		
 
