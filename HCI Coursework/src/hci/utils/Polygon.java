@@ -6,10 +6,12 @@ public class Polygon {
 	
 	private ArrayList<Point> polygonPoints;
 	private String name;
+	private String imageName;
 	
-	public Polygon(ArrayList<Point> polygonPoints, String name){
+	public Polygon(ArrayList<Point> polygonPoints, String name, String imageName){
 		this.polygonPoints = polygonPoints;
 		this.name = name;
+		this.imageName = imageName;
 	}
 	
 	public ArrayList<Point> getPoints(){
@@ -18,6 +20,10 @@ public class Polygon {
 	
 	public String getName(){
 		return this.name;
+	}
+	
+	public String getImageName(){
+		return this.imageName;
 	}
 
 }

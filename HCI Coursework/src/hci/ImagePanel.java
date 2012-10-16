@@ -8,13 +8,13 @@ import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
-import java.awt.Image;
 import java.awt.RenderingHints;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
 import java.awt.image.BufferedImage;
 import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Vector;
 
@@ -34,7 +34,7 @@ public class ImagePanel extends JPanel implements MouseListener, MouseMotionList
 	/**
 	 * image to be tagged
 	 */
-	BufferedImage image = null;
+	MyImage image = null;
 	
 	/**
 	 * list of current polygon's vertices 
@@ -45,6 +45,8 @@ public class ImagePanel extends JPanel implements MouseListener, MouseMotionList
 	 * list of polygons
 	 */
 	Vector<Polygon> polygonsList = null;
+	
+	Vector<MyImage> imagesList = null;
 	
 	/**
 	 * Flag showing if a control point is being selected
@@ -65,9 +67,7 @@ public class ImagePanel extends JPanel implements MouseListener, MouseMotionList
 	int pointIndex = -1;
 	
 	ImageLabeller parent = null;
-	
-	BufferedImage uneditedImage = null;
-	
+		
 	
 	/**
 	 * default constructor, sets up the window properties
@@ -76,6 +76,7 @@ public class ImagePanel extends JPanel implements MouseListener, MouseMotionList
 		this.parent = parent;
 		currentPolygon = new ArrayList<Point>();
 		polygonsList = new Vector<Polygon>();
+		imagesList = new Vector<MyImage>();
 
 		this.setVisible(true);
 
@@ -96,16 +97,17 @@ public class ImagePanel extends JPanel implements MouseListener, MouseMotionList
 	 */
 	public ImagePanel(ImageLabeller parent, String imageName) throws Exception{
 		this(parent);
-		image = ImageIO.read(new File(imageName));
-		uneditedImage = HelperMethods.copyImage(image);
-		if (image.getWidth() > 800 || image.getHeight() > 600) {
-			int newWidth = image.getWidth() > 800 ? 800 : (image.getWidth() * 600)/image.getHeight();
-			int newHeight = image.getHeight() > 600 ? 600 : (image.getHeight() * 800)/image.getWidth();
+		File imgFile = new File(imageName);
+		image = new MyImage(ImageIO.read(imgFile), imgFile.getName());
+		//uneditedImage = HelperMethods.copyImage(image);
+		/*if (image.getImage().getWidth() > 800 || image.getImage().getHeight() > 600) {
+			int newWidth = image.getImage().getWidth() > 800 ? 800 : (image.getImage().getWidth() * 600)/image.getImage().getHeight();
+			int newHeight = image.getImage().getHeight() > 600 ? 600 : (image.getImage().getHeight() * 800)/image.getImage().getWidth();
 			System.out.println("SCALING TO " + newWidth + "x" + newHeight );
 			Image scaledImage = image.getScaledInstance(newWidth, newHeight, Image.SCALE_FAST);
 			image = new BufferedImage(newWidth, newHeight, BufferedImage.TYPE_INT_RGB);
 			image.getGraphics().drawImage(scaledImage, 0, 0, this);
-		}
+		}*/
 	}
 	
 	@Override
@@ -113,8 +115,8 @@ public class ImagePanel extends JPanel implements MouseListener, MouseMotionList
 		
 		super.paint(g);
 		
-		image = HelperMethods.copyImage(uneditedImage);
-		Graphics2D g2D = image.createGraphics();
+		BufferedImage img = image.getOriginalImage();
+		Graphics2D g2D = img.createGraphics();
 				
 		for(Polygon polygon : polygonsList){
 			drawPolygon(polygon.getPoints(), g2D, false);
@@ -125,8 +127,8 @@ public class ImagePanel extends JPanel implements MouseListener, MouseMotionList
 		drawPolygon(currentPolygon, g2D, true);
 		
 		//show the image
-		if(image != null){
-			g.drawImage(image, 0, 0, null);
+		if(img != null){
+			g.drawImage(img, 0, 0, null);
 		}
 	}
 	
@@ -171,7 +173,7 @@ public class ImagePanel extends JPanel implements MouseListener, MouseMotionList
 		if (e.getButton() == MouseEvent.BUTTON3 && currentPolygon != null && currentPolygon.size() > 0) {
 			
 			if(isEditing){
-				polygonsList.add(editingIndex, new Polygon(currentPolygon,editingName));
+				polygonsList.add(editingIndex, new Polygon(currentPolygon,editingName,image.getName()));
 				currentPolygon = new ArrayList<Point>();
 				isEditing = false;
 				editingIndex = -1;
@@ -199,7 +201,7 @@ public class ImagePanel extends JPanel implements MouseListener, MouseMotionList
 		int y = arg0.getY();
 		
 		//check if the cursor is within image area
-		if (x > image.getWidth() || y > image.getHeight()) {
+		if (x > image.getImage().getWidth() || y > image.getImage().getHeight()) {
 			//if not do nothing
 			return;
 		}
@@ -244,10 +246,10 @@ public class ImagePanel extends JPanel implements MouseListener, MouseMotionList
 		
 		//if dragging an existing point
 		if (isPointSelected) {
-			if(arg0.getX() > image.getWidth() || arg0.getX() < 0)
+			if(arg0.getX() > image.getImage().getWidth() || arg0.getX() < 0)
 				x = currentPolygon.get(pointIndex).getX();
 			
-			if(arg0.getY() > image.getHeight() || arg0.getY() < 0)
+			if(arg0.getY() > image.getImage().getHeight() || arg0.getY() < 0)
 				y = currentPolygon.get(pointIndex).getY();
 			
 			p = new Point(x,y);
@@ -256,10 +258,10 @@ public class ImagePanel extends JPanel implements MouseListener, MouseMotionList
         }
 		//if dragging a newly added point (mouse button has not been released yet)
 		else{
-			if(arg0.getX() > image.getWidth() || arg0.getX() < 0)
+			if(arg0.getX() > image.getImage().getWidth() || arg0.getX() < 0)
 				x = currentPolygon.get(currentPolygon.size()-1).getX();
 			
-			if(arg0.getY() > image.getHeight() || arg0.getY() < 0)
+			if(arg0.getY() > image.getImage().getHeight() || arg0.getY() < 0)
 				y = currentPolygon.get(currentPolygon.size()-1).getY();
 			
 			p = new Point(x,y);
@@ -292,7 +294,7 @@ public class ImagePanel extends JPanel implements MouseListener, MouseMotionList
 				message,
 				null,
 				JOptionPane.PLAIN_MESSAGE);
-		polygonsList.add(new Polygon(currentPolygon,polygonName));
+		polygonsList.add(new Polygon(currentPolygon,polygonName, image.getName()));
 
 		currentPolygon = new ArrayList<Point>();
 		int insertPosition = parent.listModel.getSize();
@@ -318,6 +320,11 @@ public class ImagePanel extends JPanel implements MouseListener, MouseMotionList
 	public void deletePolygon(int polygonIndex){
 		polygonsList.remove(polygonIndex);
 		parent.listModel.remove(polygonIndex);
+		repaint();
+	}
+	
+	public void changeCurrentImage(File newImage) throws IOException{
+		image = new MyImage(ImageIO.read(newImage), newImage.getName());
 		repaint();
 	}
 }

@@ -1,9 +1,11 @@
 package hci;
 
 import javax.swing.BoxLayout;
+import javax.swing.DefaultComboBoxModel;
 import javax.swing.DefaultListModel;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
+import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JList;
@@ -17,6 +19,8 @@ import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import java.io.File;
+import java.io.IOException;
 
 /**
  * Main class of the program - handles display of the main window
@@ -36,6 +40,8 @@ public class ImageLabeller extends JFrame {
 	JLabel pointLabel  =null;
 	JList labelList  =null;
 	DefaultListModel listModel = null;
+	DefaultComboBoxModel imagesListModel = null;
+	JFileChooser fc = null;
 	
 	/**
 	 * toolbox - put all buttons and stuff here!
@@ -87,7 +93,9 @@ public class ImageLabeller extends JFrame {
 		helpLabel = new JLabel("Put help here.");
 		pointLabel = new JLabel("X,Y of mouse");
 		listModel = new DefaultListModel();
+		imagesListModel = new DefaultComboBoxModel();
 		labelList = new JList(listModel);
+		fc = new JFileChooser();
 
 		this.setLayout(new BoxLayout(appPanel, BoxLayout.X_AXIS));
 		this.setContentPane(appPanel);
@@ -155,11 +163,6 @@ public class ImageLabeller extends JFrame {
 		newLoadButton.setEnabled(true);
 		newLoadButton.setToolTipText("Click to load labels");
 		
-        //Add Open Close button
-		JButton newOpenButton = new JButton("Add to list");
-		newOpenButton.setMnemonic(KeyEvent.VK_N);
-		newOpenButton.setSize(50, 20);
-		newOpenButton.setEnabled(true);
 		
         //Add Chose Close button
 		JButton newCloseButton = new JButton("Remove from list");
@@ -175,16 +178,38 @@ public class ImageLabeller extends JFrame {
 		newChoseButton.setSize(100, 20);
 		newChoseButton.setEnabled(true);
 		newChoseButton.setToolTipText("Chose From Images");
+		newChoseButton.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				System.out.println("skjhfklsajdf");
+			}
+		});
 		
-		
-		
+
+        //Add Open Close button
+		JButton newOpenButton = new JButton("Add to list");
+		newOpenButton.setMnemonic(KeyEvent.VK_N);
+		newOpenButton.setSize(50, 20);
+		newOpenButton.setEnabled(true);
+		newOpenButton.setToolTipText("Click to Open Image");
 		newOpenButton.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-			    	addNewPolygon();
+				int returnValue = fc.showOpenDialog(ImageLabeller.this);
+				
+				if (returnValue == JFileChooser.APPROVE_OPTION) {
+				        File file = fc.getSelectedFile();
+				        try {
+				        	imagesListModel.addElement(file.getName());
+							imagePanel.changeCurrentImage(file);
+						} catch (IOException e1) {
+							// TODO Auto-generated catch block
+							e1.printStackTrace();
+						}
+				    }
 			}
 		});
-		newOpenButton.setToolTipText("Click to Open Image");
+		
 		imgboxPanel.setLayout(new GridLayout(0,3));
 		imgboxPanel.add(newChoseButton);
 		imgboxPanel.add(newOpenButton);
@@ -198,9 +223,7 @@ public class ImageLabeller extends JFrame {
 		rightPanel.setLayout(new GridLayout(2,0));
 		rightPanel.add(labelList);
 		rightPanel.add(toolboxPanel);
-		
-
-		
+				
 		appPanel.setLayout(new GridBagLayout());
 		GridBagConstraints gridBag = new GridBagConstraints();
 		gridBag.fill = GridBagConstraints.HORIZONTAL;
