@@ -119,6 +119,13 @@ public class ImageLabeller extends JFrame {
 		newEditButton.setSize(50, 20);
 		newEditButton.setEnabled(true);
 		newEditButton.setToolTipText("Click to edit the selected label");
+		newEditButton.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				int polygonIndex = (int) labelList.getSelectedIndex();
+			    imagePanel.editPolygon(polygonIndex);
+			}
+		});
 		
         //Add Delete button
 		JButton newDeleteButton = new JButton("Delete");
@@ -212,13 +219,13 @@ public class ImageLabeller extends JFrame {
 		gridBag.weightx = 0.5;
 		gridBag.gridx = 1;
 		gridBag.gridy = 2;
-		appPanel.add(helpLabel, gridBag);
+		appPanel.add(pointLabel, gridBag);
 		
 		gridBag.fill = GridBagConstraints.HORIZONTAL;
 		gridBag.weightx = 0.5;
 		gridBag.gridx = 3;
 		gridBag.gridy = 2;
-		appPanel.add(pointLabel, gridBag);
+		appPanel.add(helpLabel, gridBag);
 		
 		
 		//display all the stuff
