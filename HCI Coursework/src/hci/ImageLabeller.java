@@ -84,9 +84,8 @@ public class ImageLabeller extends JFrame {
 
 		//setup main window panel
 		appPanel = new JPanel();
-		helpLabel = new JLabel("Put Help Here");
+		helpLabel = new JLabel("Put help here.");
 		pointLabel = new JLabel("X,Y of mouse");
-		//String[] anArray= {"1", "2", "3", "4","1", "2", "3", "4","1", "2", "3", "4","1", "2", "3", "4","1"};
 		listModel = new DefaultListModel();
 		labelList = new JList(listModel);
 
@@ -133,6 +132,13 @@ public class ImageLabeller extends JFrame {
 		newDeleteButton.setSize(50, 20);
 		newDeleteButton.setEnabled(true);
 		newDeleteButton.setToolTipText("Click to delete the selected labels");
+		newDeleteButton.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				int polygonIndex = (int) labelList.getSelectedIndex();
+			    imagePanel.deletePolygon(polygonIndex);
+			}
+		});
 		
 		
         //Add Save button
@@ -184,7 +190,7 @@ public class ImageLabeller extends JFrame {
 		imgboxPanel.add(newOpenButton);
 		imgboxPanel.add(newCloseButton);
 		toolboxPanel.setLayout(new GridLayout(5,0));
-		toolboxPanel.add(newAddButton);
+		//toolboxPanel.add(newAddButton);
 		toolboxPanel.add(newEditButton);
 		toolboxPanel.add(newDeleteButton);
 		toolboxPanel.add(newLoadButton);
@@ -217,7 +223,7 @@ public class ImageLabeller extends JFrame {
 
 		gridBag.fill = GridBagConstraints.HORIZONTAL;
 		gridBag.weightx = 0.5;
-		gridBag.gridx = 1;
+		gridBag.gridx = 0;
 		gridBag.gridy = 2;
 		appPanel.add(pointLabel, gridBag);
 		

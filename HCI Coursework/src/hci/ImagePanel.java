@@ -314,4 +314,10 @@ public class ImagePanel extends JPanel implements MouseListener, MouseMotionList
 		isEditing = true;
 		repaint();
 	}
+	
+	public void deletePolygon(int polygonIndex){
+		polygonsList.remove(polygonIndex);
+		parent.listModel.remove(polygonIndex);
+		repaint();
+	}
 }
