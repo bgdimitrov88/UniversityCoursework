@@ -9,7 +9,6 @@ import javax.swing.JLabel;
 import javax.swing.JList;
 import javax.swing.JPanel;
 
-import java.awt.Graphics;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.GridLayout;
@@ -59,14 +58,14 @@ public class ImageLabeller extends JFrame {
 	 * handles New Object button action
 	 */
 	public void addNewPolygon() {
-		imagePanel.addNewPolygon();
+		//imagePanel.addNewPolygon();
 	}
 	
-	@Override
+	/*@Override
 	public void paint(Graphics g) {
 		super.paint(g);
-		imagePanel.paint(g); //update image panel
-	}
+		appPanel.paint(g); //update image panel
+	}*/
 	
 	/**
 	 * sets up application window

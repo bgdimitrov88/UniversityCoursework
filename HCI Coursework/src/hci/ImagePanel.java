@@ -1,15 +1,11 @@
 package hci;
 
 import javax.imageio.ImageIO;
-import javax.swing.JComponent;
-import javax.swing.JDialog;
-import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 
 import java.awt.Color;
 import java.awt.Dimension;
-import java.awt.Frame;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Image;
@@ -65,6 +61,8 @@ public class ImagePanel extends JPanel implements MouseListener, MouseMotionList
 	
 	ImageLabeller parent = null;
 	
+	BufferedImage uneditedImage = null;
+	
 	/**
 	 * default constructor, sets up the window properties
 	 */
@@ -93,6 +91,7 @@ public class ImagePanel extends JPanel implements MouseListener, MouseMotionList
 	public ImagePanel(ImageLabeller parent, String imageName) throws Exception{
 		this(parent);
 		image = ImageIO.read(new File(imageName));
+		uneditedImage = HelperMethods.copyImage(image);
 		if (image.getWidth() > 800 || image.getHeight() > 600) {
 			int newWidth = image.getWidth() > 800 ? 800 : (image.getWidth() * 600)/image.getHeight();
 			int newHeight = image.getHeight() > 600 ? 600 : (image.getHeight() * 800)/image.getWidth();
@@ -102,43 +101,35 @@ public class ImagePanel extends JPanel implements MouseListener, MouseMotionList
 			image.getGraphics().drawImage(scaledImage, 0, 0, this);
 		}
 	}
-
-	/**
-	 * Displays the image
-	 */
-	public void ShowImage() {
-		Graphics g = this.getGraphics();
-		
-		if (image != null) {
-			g.drawImage(
-					image, 0, 0, null);
-		}
-	}
 	
 	@Override
 	public void paint(Graphics g) {
 		
 		super.paint(g);
 		
-		//display iamge
-		ShowImage();
-		
+		image = HelperMethods.copyImage(uneditedImage);
+		Graphics2D g2D = image.createGraphics();
+				
 		//display all the completed polygons
 		for(ArrayList<Point> polygon : polygonsList.values()) {
-			drawPolygon(polygon);
-			finishPolygon(polygon);
+			drawPolygon(polygon, g2D);
+			finishPolygon(polygon, g2D);
 		}
 		
 		//display current polygon
-		drawPolygon(currentPolygon);
+		drawPolygon(currentPolygon, g2D);
+		
+		//show the image
+		if(image != null){
+			g.drawImage(image, 0, 0, null);
+		}
 	}
 	
 	/**
 	 * displays a polygon without last stroke
 	 * @param polygon to be displayed
 	 */
-	public void drawPolygon(ArrayList<Point> polygon) {
-		Graphics2D g = (Graphics2D)this.getGraphics();
+	public void drawPolygon(ArrayList<Point> polygon, Graphics2D g) {
 		g.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
 		g.setColor(Color.GREEN);
 		for(int i = 0; i < polygon.size(); i++) {
@@ -155,13 +146,12 @@ public class ImagePanel extends JPanel implements MouseListener, MouseMotionList
 	 * displays last stroke of the polygon (arch between the last and first vertices)
 	 * @param polygon to be finished
 	 */
-	public void finishPolygon(ArrayList<Point> polygon) {
+	public void finishPolygon(ArrayList<Point> polygon, Graphics2D g) {
 		//if there are less than 3 vertices than nothing to be completed
 		if (polygon.size() >= 3) {
 			Point firstVertex = polygon.get(0);
 			Point lastVertex = polygon.get(polygon.size() - 1);
 		
-			Graphics2D g = (Graphics2D)this.getGraphics();
 			g.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
 			g.setColor(Color.GREEN);
 			g.drawLine(firstVertex.getX(), firstVertex.getY(), lastVertex.getX(), lastVertex.getY());
@@ -171,7 +161,7 @@ public class ImagePanel extends JPanel implements MouseListener, MouseMotionList
 	/**
 	 * moves current polygon to the list of polygons and makes pace for a new one
 	 */
-	public void addNewPolygon() {
+	/*public void addNewPolygon() {
 		//finish the current polygon if any
 		if (currentPolygon != null ) {
 			finishPolygon(currentPolygon);
@@ -179,23 +169,21 @@ public class ImagePanel extends JPanel implements MouseListener, MouseMotionList
 		}
 		
 		currentPolygon = new ArrayList<Point>();
-	}
+	}*/
 
 	@Override
 	public void mouseClicked(MouseEvent e) {
 		if (e.getButton() == MouseEvent.BUTTON3) {
-			finishPolygon(currentPolygon);
-			currentPolygon = new ArrayList<Point>();
-			
 			String polygonName = JOptionPane.showInputDialog(this.getParent(),
 					"Enter polygon name",
 					null,
 					JOptionPane.PLAIN_MESSAGE);
-
 			polygonsList.put(polygonName, currentPolygon);
+
+			currentPolygon = new ArrayList<Point>();
 			int insertPosition = parent.listModel.getSize();
 			parent.listModel.add(insertPosition, polygonName);
-			//parent.repaint();
+			repaint();
 		}
 	}
 
@@ -230,27 +218,11 @@ public class ImagePanel extends JPanel implements MouseListener, MouseMotionList
 		//if drawing a new point
 		else {
 			
-			Graphics2D g = (Graphics2D)this.getGraphics();
-			g.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);		
-			
 			//if the left button than we will add a vertex to poly
-			if (arg0.getButton() == MouseEvent.BUTTON1) {
-				g.setColor(Color.GREEN);
-				if (currentPolygon.size() != 0) {
-					Point lastVertex = currentPolygon.get(currentPolygon.size() - 1);
-					g.drawLine(lastVertex.getX(), lastVertex.getY(), x, y);
-				}
-				g.fillOval(x-5,y-5,10,10);
-				
+			if (arg0.getButton() == MouseEvent.BUTTON1) {				
 				currentPolygon.add(new Point(x,y));
-				System.out.println(x + " " + y);
 			}
-			ShowImage();
-			/*for(ArrayList<Point> polygon : polygonsList.values()) {
-				drawPolygon(polygon);
-				finishPolygon(polygon);
-			}*/
-			drawPolygon(currentPolygon);
+			repaint();
 		}
 	}
 
@@ -262,12 +234,10 @@ public class ImagePanel extends JPanel implements MouseListener, MouseMotionList
 
 	@Override
 	public void mouseMoved(MouseEvent arg0) {
-		//Point p = new Point(arg0.getX(), arg0.getY());
-		//pointIndex = getNearestControlPoint(p);
 	}
 	
 	@Override
-	public void mouseDragged(MouseEvent arg0){
+	public void mouseDragged (MouseEvent arg0){
 		Point p = null;
 		
 		int x = arg0.getX();
@@ -298,8 +268,7 @@ public class ImagePanel extends JPanel implements MouseListener, MouseMotionList
 			currentPolygon.set(currentPolygon.size()-1, p);
 		}
 		
-		ShowImage();
-		drawPolygon(currentPolygon);
+		repaint();
 	}
 	
 	public int getNearestControlPoint(Point p) {
