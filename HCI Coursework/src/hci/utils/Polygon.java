@@ -8,6 +8,12 @@ public class Polygon {
 	private String name;
 	private String imageName;
 	
+	public Polygon(){
+		this.polygonPoints = new ArrayList<Point>();
+		this.name = "";
+		this.imageName = "";
+	}
+	
 	public Polygon(ArrayList<Point> polygonPoints, String name, String imageName){
 		this.polygonPoints = polygonPoints;
 		this.name = name;

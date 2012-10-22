@@ -39,9 +39,18 @@ public class ImageLabeller extends JFrame {
 	JLabel helpLabel =null;
 	JLabel pointLabel  =null;
 	JList labelList  =null;
+	JButton newAddButton = null;
+	JButton newEditButton = null;
+	JButton newDeleteButton = null;
+	JButton newSaveButton = null;
+	JButton newLoadButton = null;
+	JButton newCloseButton = null;
+	JComboBox newChooseButton = null;
+	JButton newOpenButton = null;
 	DefaultListModel listModel = null;
 	DefaultComboBoxModel imagesListModel = null;
 	JFileChooser fc = null;
+	boolean loadingNewImage = false;
 	
 	/**
 	 * toolbox - put all buttons and stuff here!
@@ -96,12 +105,20 @@ public class ImageLabeller extends JFrame {
 		imagesListModel = new DefaultComboBoxModel();
 		labelList = new JList(listModel);
 		fc = new JFileChooser();
+		newAddButton = new JButton("Add");
+		newEditButton = new JButton("Edit");
+		newDeleteButton = new JButton("Delete");
+		newSaveButton = new JButton("Save");
+		newLoadButton = new JButton("Load");
+		newCloseButton = new JButton("Remove from list");
+		newChooseButton = new JComboBox(imagesListModel);
+		newOpenButton = new JButton("Add to list");
 
 		this.setLayout(new BoxLayout(appPanel, BoxLayout.X_AXIS));
 		this.setContentPane(appPanel);
 		
         //Create and set up the image panel.
-		imagePanel = new ImagePanel(this, imageFilename);
+		imagePanel = new ImagePanel(this);//, imageFilename);
 		imagePanel.setOpaque(true); //content panes must be opaque
 		
 
@@ -114,14 +131,12 @@ public class ImageLabeller extends JFrame {
        
         
         //Add Add button
-		JButton newAddButton = new JButton("Add");
 		newAddButton.setMnemonic(KeyEvent.VK_N);
 		newAddButton.setSize(50, 20);
 		newAddButton.setEnabled(true);
 		newAddButton.setToolTipText("Click to Add labels");
 		
         //Add Edit button
-		JButton newEditButton = new JButton("Edit");
 		newEditButton.setMnemonic(KeyEvent.VK_N);
 		newEditButton.setSize(50, 20);
 		newEditButton.setEnabled(true);
@@ -135,7 +150,6 @@ public class ImageLabeller extends JFrame {
 		});
 		
         //Add Delete button
-		JButton newDeleteButton = new JButton("Delete");
 		newDeleteButton.setMnemonic(KeyEvent.VK_N);
 		newDeleteButton.setSize(50, 20);
 		newDeleteButton.setEnabled(true);
@@ -150,14 +164,12 @@ public class ImageLabeller extends JFrame {
 		
 		
         //Add Save button
-		JButton newSaveButton = new JButton("Save");
 		newSaveButton.setMnemonic(KeyEvent.VK_N);
 		newSaveButton.setSize(50, 20);
 		newSaveButton.setEnabled(true);
 		newSaveButton.setToolTipText("Click to save the current labels");
 		
         //Add Load button
-		JButton newLoadButton = new JButton("Load");
 		newLoadButton.setMnemonic(KeyEvent.VK_N);
 		newLoadButton.setSize(50, 20);
 		newLoadButton.setEnabled(true);
@@ -165,7 +177,6 @@ public class ImageLabeller extends JFrame {
 		
 		
         //Add Chose Close button
-		JButton newCloseButton = new JButton("Remove from list");
 		newCloseButton.setMnemonic(KeyEvent.VK_N);
 		newCloseButton.setSize(50, 20);
 		newCloseButton.setEnabled(true);
@@ -174,20 +185,22 @@ public class ImageLabeller extends JFrame {
 		newCloseButton.setToolTipText("Click to Close Image");
 		
         //Add Chose Image button
-		JComboBox newChoseButton = new JComboBox();
-		newChoseButton.setSize(100, 20);
-		newChoseButton.setEnabled(true);
-		newChoseButton.setToolTipText("Chose From Images");
-		newChoseButton.addActionListener(new ActionListener() {
+		newChooseButton.setSize(100, 20);
+		newChooseButton.setEnabled(true);
+		newChooseButton.setToolTipText("Choose an image file.");
+		newChooseButton.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				System.out.println("skjhfklsajdf");
+				if(loadingNewImage)
+					loadingNewImage = false;
+				else
+				 imagePanel.changeCurrentImage((String) imagesListModel.getSelectedItem());
+				//System.out.println(e.getActionCommand());
 			}
 		});
 		
 
         //Add Open Close button
-		JButton newOpenButton = new JButton("Add to list");
 		newOpenButton.setMnemonic(KeyEvent.VK_N);
 		newOpenButton.setSize(50, 20);
 		newOpenButton.setEnabled(true);
@@ -200,8 +213,8 @@ public class ImageLabeller extends JFrame {
 				if (returnValue == JFileChooser.APPROVE_OPTION) {
 				        File file = fc.getSelectedFile();
 				        try {
-				        	imagesListModel.addElement(file.getName());
-							imagePanel.changeCurrentImage(file);
+				        	loadingNewImage = true;
+							imagePanel.loadNewImage(file);
 						} catch (IOException e1) {
 							// TODO Auto-generated catch block
 							e1.printStackTrace();
@@ -211,7 +224,7 @@ public class ImageLabeller extends JFrame {
 		});
 		
 		imgboxPanel.setLayout(new GridLayout(0,3));
-		imgboxPanel.add(newChoseButton);
+		imgboxPanel.add(newChooseButton);
 		imgboxPanel.add(newOpenButton);
 		imgboxPanel.add(newCloseButton);
 		toolboxPanel.setLayout(new GridLayout(5,0));
