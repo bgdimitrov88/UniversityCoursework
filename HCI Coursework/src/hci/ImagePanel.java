@@ -294,6 +294,11 @@ public class ImagePanel extends JPanel implements MouseListener, MouseMotionList
 				message,
 				null,
 				JOptionPane.PLAIN_MESSAGE);
+		
+		if(polygonName == null || polygonName.equals("")){
+			addPolygon("Polygon name must not be empty. Enter name again.");
+		}
+		
 		polygonsList.add(new Polygon(currentPolygon,polygonName, image.getName()));
 
 		currentPolygon = new ArrayList<Point>();
