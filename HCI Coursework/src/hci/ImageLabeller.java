@@ -1,5 +1,6 @@
 package hci;
 
+import hci.utils.MyImage;
 import hci.utils.MyPoint;
 import hci.utils.MyPolygon;
 
@@ -57,7 +58,7 @@ public class ImageLabeller extends JFrame {
 	JButton newCloseButton = null;
 	JComboBox newChooseButton = null;
 	JButton newOpenButton = null;
-	DefaultListModel listModel = null;
+	DefaultListModel labelsListModel = null;
 	DefaultComboBoxModel imagesListModel = null;
 	JFileChooser fc = null;
 	boolean loadingNewImage = false;
@@ -111,9 +112,9 @@ public class ImageLabeller extends JFrame {
 		appPanel = new JPanel();
 		helpLabel = new JLabel("Put help here.");
 		pointLabel = new JLabel("X,Y of mouse");
-		listModel = new DefaultListModel();
+		labelsListModel = new DefaultListModel();
 		imagesListModel = new DefaultComboBoxModel();
-		labelList = new JList(listModel);
+		labelList = new JList(labelsListModel);
 		fc = new JFileChooser();
 		newRenameButton = new JButton("Rename");
 		newEditButton = new JButton("Edit");
@@ -247,7 +248,7 @@ public class ImageLabeller extends JFrame {
 								if(result == JOptionPane.OK_OPTION){
 										
 										if(isPolygonName){
-											listModel.add(listModel.getSize(), currentLine);
+											labelsListModel.add(labelsListModel.getSize(), currentLine);
 											polygonName = currentLine;
 										}
 										else{
@@ -285,9 +286,68 @@ public class ImageLabeller extends JFrame {
 		newCloseButton.setMnemonic(KeyEvent.VK_N);
 		newCloseButton.setSize(50, 20);
 		newCloseButton.setEnabled(true);
-
-
 		newCloseButton.setToolTipText("Click to Close Image");
+		newCloseButton.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				int result = JOptionPane.showConfirmDialog(ImageLabeller.this, "Do you want to save the labels for this image?", "Save labels for image", JOptionPane.YES_NO_OPTION);
+			
+				if(result == JOptionPane.YES_OPTION){
+					int returnValue = fc.showSaveDialog(ImageLabeller.this);
+					
+					if (returnValue == JFileChooser.APPROVE_OPTION) {
+					        File file = fc.getSelectedFile();
+					        file.setWritable(true);
+					        
+					        try {
+								BufferedWriter br = new BufferedWriter(new FileWriter(file));
+								
+								br.write(imagePanel.image.getName() + "\n");
+								for(MyPolygon p : imagePanel.currentPolygonsList){
+									br.write(p.getName() + "\n");
+									for(MyPoint pt : p.getPoints()){
+										br.write(pt.getX() + "," + pt.getY() + ";");
+									}
+									br.write("\n");
+								}
+								
+								br.flush();
+								br.close();
+								
+							} catch (IOException e1) {
+								// TODO Auto-generated catch block
+								e1.printStackTrace();
+							}
+					    }
+				}
+				
+				labelsListModel.clear();
+				
+				String imageName = imagePanel.image.getName();
+
+				imagesListModel.removeElement(imagePanel.image.getName());
+				
+				if(imagesListModel.getSize() > 0){
+					imagesListModel.setSelectedItem(imagesListModel.getElementAt(0));
+				}
+				
+				for(MyImage i : imagePanel.imagesList){
+					if(i.getName().equals(imageName)){
+						imagePanel.imagesList.remove(i);
+						break;
+					}
+				}
+				
+				if(imagePanel.imagesList.size() > 0){
+					imagePanel.image = imagePanel.imagesList.firstElement();
+				}
+				else {
+					imagePanel.image = null;
+				}
+				
+				repaint();				
+			}
+		});
 		
         //Add Chose Image button
 		newChooseButton.setSize(100, 20);

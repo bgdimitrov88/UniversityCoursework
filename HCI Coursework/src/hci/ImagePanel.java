@@ -313,8 +313,8 @@ public class ImagePanel extends JPanel implements MouseListener, MouseMotionList
 		currentPolygonsList.add(new MyPolygon(currentPolygon.getPoints(),polygonName, image.getName()));
 
 		currentPolygon = new MyPolygon();
-		int insertPosition = parent.listModel.getSize();
-		parent.listModel.add(insertPosition, polygonName);
+		int insertPosition = parent.labelsListModel.getSize();
+		parent.labelsListModel.add(insertPosition, polygonName);
 	}
 	
 	public void editPolygon(int polygonIndex){
@@ -351,12 +351,12 @@ public class ImagePanel extends JPanel implements MouseListener, MouseMotionList
 		}
 		
 		currentPolygonsList.get(polygonIndex).setName(polygonName);
-		parent.listModel.set(polygonIndex, polygonName);
+		parent.labelsListModel.set(polygonIndex, polygonName);
 	}
 	
 	public void deletePolygon(int polygonIndex){
 		currentPolygonsList.remove(polygonIndex);
-		parent.listModel.remove(polygonIndex);
+		parent.labelsListModel.remove(polygonIndex);
 		repaint();
 	}
 	
@@ -375,7 +375,7 @@ public class ImagePanel extends JPanel implements MouseListener, MouseMotionList
 		image = new MyImage(ImageIO.read(newImage), newImage.getName());
 		imagesList.add(image);
 		
-		parent.listModel.clear();
+		parent.labelsListModel.clear();
 		
 		parent.imagesListModel.addElement(newImage.getName());
 		parent.imagesListModel.setSelectedItem(newImage.getName());
@@ -400,13 +400,13 @@ public class ImagePanel extends JPanel implements MouseListener, MouseMotionList
 			}
 		}
 		
-	    parent.listModel.clear();
+	    parent.labelsListModel.clear();
 		
 	    int index = 0;
 		for(MyPolygon p : polygonsList){
 			if(p.getImageName().equals(imageName)){
 				currentPolygonsList.add(p);
-				parent.listModel.add(index, p.getName());
+				parent.labelsListModel.add(index, p.getName());
 				index++;
 			}
 		}
