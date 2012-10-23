@@ -49,7 +49,7 @@ public class ImageLabeller extends JFrame {
 	JLabel helpLabel =null;
 	JLabel pointLabel  =null;
 	JList labelList  =null;
-	JButton newAddButton = null;
+	JButton newRenameButton = null;
 	JButton newEditButton = null;
 	JButton newDeleteButton = null;
 	JButton newSaveButton = null;
@@ -115,7 +115,7 @@ public class ImageLabeller extends JFrame {
 		imagesListModel = new DefaultComboBoxModel();
 		labelList = new JList(listModel);
 		fc = new JFileChooser();
-		newAddButton = new JButton("Add");
+		newRenameButton = new JButton("Rename");
 		newEditButton = new JButton("Edit");
 		newDeleteButton = new JButton("Delete");
 		newSaveButton = new JButton("Save");
@@ -141,10 +141,17 @@ public class ImageLabeller extends JFrame {
        
         
         //Add Add button
-		newAddButton.setMnemonic(KeyEvent.VK_N);
-		newAddButton.setSize(50, 20);
-		newAddButton.setEnabled(true);
-		newAddButton.setToolTipText("Click to Add labels");
+		newRenameButton.setMnemonic(KeyEvent.VK_N);
+		newRenameButton.setSize(50, 20);
+		newRenameButton.setEnabled(true);
+		newRenameButton.setToolTipText("Click to Add labels");
+		newRenameButton.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				int polygonIndex = (int) labelList.getSelectedIndex();
+			    imagePanel.renamePolygon(polygonIndex, "Enter new name for the polygon");
+			}
+		});
 		
         //Add Edit button
 		newEditButton.setMnemonic(KeyEvent.VK_N);
@@ -326,7 +333,7 @@ public class ImageLabeller extends JFrame {
 		imgboxPanel.add(newOpenButton);
 		imgboxPanel.add(newCloseButton);
 		toolboxPanel.setLayout(new GridLayout(5,0));
-		//toolboxPanel.add(newAddButton);
+		toolboxPanel.add(newRenameButton);
 		toolboxPanel.add(newEditButton);
 		toolboxPanel.add(newDeleteButton);
 		toolboxPanel.add(newLoadButton);

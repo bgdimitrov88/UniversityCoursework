@@ -333,6 +333,27 @@ public class ImagePanel extends JPanel implements MouseListener, MouseMotionList
 		repaint();
 	}
 	
+	public void renamePolygon(int polygonIndex, String renameMessage){
+		
+		String polygonName = JOptionPane.showInputDialog(this.getParent(),
+				renameMessage,
+				null,
+				JOptionPane.PLAIN_MESSAGE);
+		
+		if(polygonName == null || polygonName.equals("")){
+			renamePolygon(polygonIndex, "Polygon name must not be empty. Enter name again.");
+		}
+		
+		for(MyPolygon p : currentPolygonsList){
+			if(p.getName().equals((polygonName))){
+				renamePolygon(polygonIndex, "Polygon name already exist. Enter a different name.");
+			}
+		}
+		
+		currentPolygonsList.get(polygonIndex).setName(polygonName);
+		parent.listModel.set(polygonIndex, polygonName);
+	}
+	
 	public void deletePolygon(int polygonIndex){
 		currentPolygonsList.remove(polygonIndex);
 		parent.listModel.remove(polygonIndex);

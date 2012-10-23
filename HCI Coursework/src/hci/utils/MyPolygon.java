@@ -34,6 +34,12 @@ public class MyPolygon {
 		return this.name;
 	}
 	
+	public void setName(String name) {
+		if(name != null && name != ""){
+			this.name = name;
+		}
+	}
+	
 	public String getImageName(){
 		return this.imageName;
 	}
