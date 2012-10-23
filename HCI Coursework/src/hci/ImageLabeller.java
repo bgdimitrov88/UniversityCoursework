@@ -110,9 +110,9 @@ public class ImageLabeller extends JFrame {
 		newDeleteButton = new JButton("Delete");
 		newSaveButton = new JButton("Save");
 		newLoadButton = new JButton("Load");
-		newCloseButton = new JButton("Remove from list");
+		newCloseButton = new JButton("Remove image from list");
 		newChooseButton = new JComboBox(imagesListModel);
-		newOpenButton = new JButton("Add to list");
+		newOpenButton = new JButton("Add image to list");
 
 		this.setLayout(new BoxLayout(appPanel, BoxLayout.X_AXIS));
 		this.setContentPane(appPanel);

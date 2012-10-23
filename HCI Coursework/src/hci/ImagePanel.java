@@ -304,6 +304,12 @@ public class ImagePanel extends JPanel implements MouseListener, MouseMotionList
 			addPolygon("Polygon name must not be empty. Enter name again.");
 		}
 		
+		for(Polygon p : currentPolygonsList){
+			if(p.getName().equals((polygonName))){
+				addPolygon("Polygon name already exist. Enter a different name.");
+			}
+		}
+		
 		currentPolygonsList.add(new Polygon(currentPolygon.getPoints(),polygonName, image.getName()));
 
 		currentPolygon = new Polygon();
