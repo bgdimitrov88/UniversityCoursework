@@ -322,6 +322,7 @@ public class ImageLabeller extends JFrame {
 				}
 				
 				labelsListModel.clear();
+				imagePanel.currentPolygonsList.clear();
 				
 				String imageName = imagePanel.image.getName();
 
@@ -378,7 +379,20 @@ public class ImageLabeller extends JFrame {
 				        File file = fc.getSelectedFile();
 				        try {
 				        	loadingNewImage = true;
-							imagePanel.loadNewImage(file);
+				        	boolean imageAlreadyLoaded = false;
+				        	
+				        	for(MyImage i : imagePanel.imagesList){
+				        		if(i.getName().equals(file.getName()))
+				        			imageAlreadyLoaded = true;
+				        	}
+				        	
+				        	if(imageAlreadyLoaded){
+				        		imagePanel.changeCurrentImage(file.getName());
+				        		imagesListModel.setSelectedItem(file.getName());
+				        	}
+				        	else
+				        		imagePanel.loadNewImage(file);
+				        	
 						} catch (IOException e1) {
 							// TODO Auto-generated catch block
 							e1.printStackTrace();

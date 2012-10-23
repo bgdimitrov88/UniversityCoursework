@@ -355,8 +355,16 @@ public class ImagePanel extends JPanel implements MouseListener, MouseMotionList
 	}
 	
 	public void deletePolygon(int polygonIndex){
+		String name = currentPolygonsList.get(polygonIndex).getName();
 		currentPolygonsList.remove(polygonIndex);
 		parent.labelsListModel.remove(polygonIndex);
+		
+		for(MyPolygon p : polygonsList){
+			if(p.getName().equals(name) && p.getImageName().equals(image.getName())){
+				polygonsList.remove(p);
+			}
+		}
+		
 		repaint();
 	}
 	
@@ -367,7 +375,8 @@ public class ImagePanel extends JPanel implements MouseListener, MouseMotionList
 		}
 		
 		for(MyPolygon p: currentPolygonsList){
-			polygonsList.add(p);
+			if(!polygonsList.contains(p))
+				polygonsList.add(p);
 		}
 		
 		currentPolygonsList.clear();
