@@ -338,7 +338,6 @@ public class ImagePanel extends JPanel implements MouseListener, MouseMotionList
 		if(currentPolygon.getPoints().size() > 0){
 			addPolygon("Please enter name for the polygon");
 		}
-		imagesList.add(image);
 		
 		for(Polygon p: currentPolygonsList){
 			polygonsList.add(p);
@@ -347,10 +346,12 @@ public class ImagePanel extends JPanel implements MouseListener, MouseMotionList
 		currentPolygonsList.clear();
 		
 		image = new MyImage(ImageIO.read(newImage), newImage.getName());
+		imagesList.add(image);
 		
 		parent.listModel.clear();
 		
 		parent.imagesListModel.addElement(newImage.getName());
+		parent.imagesListModel.setSelectedItem(newImage.getName());
 		repaint();
 	}
 	
@@ -359,14 +360,20 @@ public class ImagePanel extends JPanel implements MouseListener, MouseMotionList
 			addPolygon("Please enter name for the polygon");
 		}
 		
-		//TODO: za6to e null i v taq typotiq ?!
+		for(Polygon p: currentPolygonsList){
+			if(!polygonsList.contains(p))
+				polygonsList.add(p);
+		}
+		
+		currentPolygonsList.clear();
+		
 		for(MyImage i : imagesList){
 			if(i.getName().equals(imageName)){
 				image = i;
 			}
 		}
 		
-	    currentPolygonsList.clear();
+	    parent.listModel.clear();
 		
 	    int index = 0;
 		for(Polygon p : polygonsList){
