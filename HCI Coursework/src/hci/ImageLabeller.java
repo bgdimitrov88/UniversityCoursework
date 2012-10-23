@@ -1,5 +1,8 @@
 package hci;
 
+import hci.utils.MyPoint;
+import hci.utils.MyPolygon;
+
 import javax.swing.BoxLayout;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.DefaultListModel;
@@ -9,6 +12,7 @@ import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JList;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 
 import java.awt.GridBagConstraints;
@@ -19,8 +23,14 @@ import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
 import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.FileWriter;
 import java.io.IOException;
+import java.util.ArrayList;
 
 /**
  * Main class of the program - handles display of the main window
@@ -168,12 +178,101 @@ public class ImageLabeller extends JFrame {
 		newSaveButton.setSize(50, 20);
 		newSaveButton.setEnabled(true);
 		newSaveButton.setToolTipText("Click to save the current labels");
+		newSaveButton.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				int returnValue = fc.showSaveDialog(ImageLabeller.this);
+								
+				if (returnValue == JFileChooser.APPROVE_OPTION) {
+				        File file = fc.getSelectedFile();
+				        file.setWritable(true);
+				        
+				        try {
+							BufferedWriter br = new BufferedWriter(new FileWriter(file));
+							
+							br.write(imagePanel.image.getName() + "\n");
+							for(MyPolygon p : imagePanel.currentPolygonsList){
+								br.write(p.getName() + "\n");
+								for(MyPoint pt : p.getPoints()){
+									br.write(pt.getX() + "," + pt.getY() + ";");
+								}
+								br.write("\n");
+							}
+							
+							br.flush();
+							br.close();
+							
+						} catch (IOException e1) {
+							// TODO Auto-generated catch block
+							e1.printStackTrace();
+						}
+				    }
+			}
+		});
 		
         //Add Load button
 		newLoadButton.setMnemonic(KeyEvent.VK_N);
 		newLoadButton.setSize(50, 20);
 		newLoadButton.setEnabled(true);
 		newLoadButton.setToolTipText("Click to load labels");
+		newLoadButton.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				int returnValue = fc.showOpenDialog(ImageLabeller.this);
+								
+				if (returnValue == JFileChooser.APPROVE_OPTION) {
+				        File file = fc.getSelectedFile();
+				        file.setWritable(true);
+				        
+				        try {
+							BufferedReader br = new BufferedReader(new FileReader(file));
+							String currentLine;
+
+								int result = JOptionPane.OK_OPTION;
+								if(((currentLine = br.readLine()) != null) && !currentLine.equals(imagePanel.image.getName())){
+									
+									result = JOptionPane.showConfirmDialog(ImageLabeller.this, "This set of labels is for a different image. Are you sure you want to load it?", "Label set belongs to different image", JOptionPane.OK_CANCEL_OPTION);
+								}
+								
+								boolean isPolygonName = true;
+								while((currentLine = br.readLine()) != null){
+								if(result == JOptionPane.OK_OPTION){
+										
+										if(isPolygonName){
+											listModel.add(listModel.getSize(), currentLine);
+										}
+										else{
+											String[] points = currentLine.split(";");
+											
+											//System.out.println(points.length);
+											//for(String s : points){System.out.println(s);}
+											
+											ArrayList<MyPoint> polygonPoints = new ArrayList<MyPoint>();
+											
+											for(String point : points){
+												String[] pointXY = point.split(",");
+												polygonPoints.add(new MyPoint(Integer.parseInt(pointXY[0]), Integer.parseInt(pointXY[1])));
+											}
+											
+											imagePanel.currentPolygonsList.add(new MyPolygon(polygonPoints));
+											
+										}
+										
+										isPolygonName = !isPolygonName;
+								}
+							}
+							
+							br.close();
+							imagePanel.repaint();
+							
+						} catch (FileNotFoundException e1) {
+							e1.printStackTrace();
+						} catch ( IOException e2) {
+							e2.printStackTrace();
+						}
+				    }
+			}
+		});
 		
 		
         //Add Chose Close button
@@ -195,7 +294,6 @@ public class ImageLabeller extends JFrame {
 					loadingNewImage = false;
 				else
 				 imagePanel.changeCurrentImage((String) imagesListModel.getSelectedItem());
-				//System.out.println(e.getActionCommand());
 			}
 		});
 		

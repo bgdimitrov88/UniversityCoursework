@@ -39,16 +39,16 @@ public class ImagePanel extends JPanel implements MouseListener, MouseMotionList
 	/**
 	 * list of current polygon's vertices 
 	 */
-	Polygon currentPolygon = null;
+	MyPolygon currentPolygon = null;
 	
 	/**
 	 * list of polygons
 	 */
-	Vector<Polygon> currentPolygonsList = null;
+	Vector<MyPolygon> currentPolygonsList = null;
 	
 	Vector<MyImage> imagesList = null;
 	
-	Vector<Polygon> polygonsList = null;
+	Vector<MyPolygon> polygonsList = null;
 	
 	/**
 	 * Flag showing if a control point is being selected
@@ -76,9 +76,9 @@ public class ImagePanel extends JPanel implements MouseListener, MouseMotionList
 	 */
 	public ImagePanel(ImageLabeller parent) {
 		this.parent = parent;
-		currentPolygon = new Polygon();
-		currentPolygonsList = new Vector<Polygon>();
-		polygonsList = new Vector<Polygon>();
+		currentPolygon = new MyPolygon();
+		currentPolygonsList = new Vector<MyPolygon>();
+		polygonsList = new Vector<MyPolygon>();
 		imagesList = new Vector<MyImage>();
 
 		this.setVisible(true);
@@ -122,7 +122,7 @@ public class ImagePanel extends JPanel implements MouseListener, MouseMotionList
 			BufferedImage img = image.getOriginalImage();
 			Graphics2D g2D = img.createGraphics();
 					
-			for(Polygon polygon : currentPolygonsList){
+			for(MyPolygon polygon : currentPolygonsList){
 				drawPolygon(polygon.getPoints(), g2D, false);
 				finishPolygon(polygon.getPoints(), g2D);
 			}
@@ -141,16 +141,16 @@ public class ImagePanel extends JPanel implements MouseListener, MouseMotionList
 	 * displays a polygon without last stroke
 	 * @param polygon to be displayed
 	 */
-	public void drawPolygon(ArrayList<Point> polygon, Graphics2D g, boolean isCurrent) {
+	public void drawPolygon(ArrayList<MyPoint> polygon, Graphics2D g, boolean isCurrent) {
 		g.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
 		if(isCurrent)
 			g.setColor(Color.BLUE);
 		else
 			g.setColor(Color.GREEN);
 		for(int i = 0; i < polygon.size(); i++) {
-			Point currentVertex = polygon.get(i);
+			MyPoint currentVertex = polygon.get(i);
 			if (i != 0) {
-				Point prevVertex = polygon.get(i - 1);
+				MyPoint prevVertex = polygon.get(i - 1);
 				g.drawLine(prevVertex.getX(), prevVertex.getY(), currentVertex.getX(), currentVertex.getY());
 			}
 			g.fillOval(currentVertex.getX() - 5, currentVertex.getY() - 5, 10, 10);
@@ -161,11 +161,11 @@ public class ImagePanel extends JPanel implements MouseListener, MouseMotionList
 	 * displays last stroke of the polygon (arch between the last and first vertices)
 	 * @param polygon to be finished
 	 */
-	public void finishPolygon(ArrayList<Point> polygon, Graphics2D g) {
+	public void finishPolygon(ArrayList<MyPoint> polygon, Graphics2D g) {
 		//if there are less than 3 vertices than nothing to be completed
 		if (polygon.size() >= 3) {
-			Point firstVertex = polygon.get(0);
-			Point lastVertex = polygon.get(polygon.size() - 1);
+			MyPoint firstVertex = polygon.get(0);
+			MyPoint lastVertex = polygon.get(polygon.size() - 1);
 		
 			g.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
 			g.setColor(Color.GREEN);
@@ -178,8 +178,8 @@ public class ImagePanel extends JPanel implements MouseListener, MouseMotionList
 		if (e.getButton() == MouseEvent.BUTTON3 && currentPolygon != null && currentPolygon.getPoints().size() > 0) {
 			
 			if(isEditing){
-				currentPolygonsList.add(editingIndex, new Polygon(currentPolygon.getPoints(),editingName,image.getName()));
-				currentPolygon = new Polygon();
+				currentPolygonsList.add(editingIndex, new MyPolygon(currentPolygon.getPoints(),editingName,image.getName()));
+				currentPolygon = new MyPolygon();
 				isEditing = false;
 				editingIndex = -1;
 				editingName = "";				
@@ -211,7 +211,7 @@ public class ImagePanel extends JPanel implements MouseListener, MouseMotionList
 			return;
 		}
 		
-		Point p = new Point(arg0.getX(), arg0.getY());
+		MyPoint p = new MyPoint(arg0.getX(), arg0.getY());
 		
 		pointIndex = getNearestControlPoint(p);
 		
@@ -225,7 +225,7 @@ public class ImagePanel extends JPanel implements MouseListener, MouseMotionList
 			
 			//if the left button than we will add a vertex to poly
 			if (arg0.getButton() == MouseEvent.BUTTON1) {				
-				currentPolygon.getPoints().add(new Point(x,y));
+				currentPolygon.getPoints().add(new MyPoint(x,y));
 			}
 			repaint();
 		}
@@ -244,7 +244,7 @@ public class ImagePanel extends JPanel implements MouseListener, MouseMotionList
 	
 	@Override
 	public void mouseDragged (MouseEvent arg0){
-		Point p = null;
+		MyPoint p = null;
 		
 		int x = arg0.getX();
 		int y = arg0.getY();
@@ -257,7 +257,7 @@ public class ImagePanel extends JPanel implements MouseListener, MouseMotionList
 			if(arg0.getY() > image.getImage().getHeight() || arg0.getY() < 0)
 				y = currentPolygon.getPoints().get(pointIndex).getY();
 			
-			p = new Point(x,y);
+			p = new MyPoint(x,y);
 			
         	currentPolygon.getPoints().set(pointIndex, p);
         }
@@ -269,7 +269,7 @@ public class ImagePanel extends JPanel implements MouseListener, MouseMotionList
 			if(arg0.getY() > image.getImage().getHeight() || arg0.getY() < 0)
 				y = currentPolygon.getPoints().get(currentPolygon.getPoints().size()-1).getY();
 			
-			p = new Point(x,y);
+			p = new MyPoint(x,y);
 			
 			currentPolygon.getPoints().set(currentPolygon.getPoints().size()-1, p);
 		}
@@ -277,7 +277,7 @@ public class ImagePanel extends JPanel implements MouseListener, MouseMotionList
 		repaint();
 	}
 	
-	public int getNearestControlPoint(Point p) {
+	public int getNearestControlPoint(MyPoint p) {
 		int radius = 5;
         double best = (radius << 3) + 1;
         int bestInd = -1;
@@ -304,15 +304,15 @@ public class ImagePanel extends JPanel implements MouseListener, MouseMotionList
 			addPolygon("Polygon name must not be empty. Enter name again.");
 		}
 		
-		for(Polygon p : currentPolygonsList){
+		for(MyPolygon p : currentPolygonsList){
 			if(p.getName().equals((polygonName))){
 				addPolygon("Polygon name already exist. Enter a different name.");
 			}
 		}
 		
-		currentPolygonsList.add(new Polygon(currentPolygon.getPoints(),polygonName, image.getName()));
+		currentPolygonsList.add(new MyPolygon(currentPolygon.getPoints(),polygonName, image.getName()));
 
-		currentPolygon = new Polygon();
+		currentPolygon = new MyPolygon();
 		int insertPosition = parent.listModel.getSize();
 		parent.listModel.add(insertPosition, polygonName);
 	}
@@ -323,7 +323,7 @@ public class ImagePanel extends JPanel implements MouseListener, MouseMotionList
 			addPolygon("Please enter name for the current polygon");
 		}
 		
-		Polygon editingPolygon = currentPolygonsList.get(polygonIndex);
+		MyPolygon editingPolygon = currentPolygonsList.get(polygonIndex);
 		currentPolygon = editingPolygon;
 		currentPolygonsList.remove(polygonIndex);
 		
@@ -345,7 +345,7 @@ public class ImagePanel extends JPanel implements MouseListener, MouseMotionList
 			addPolygon("Please enter name for the polygon");
 		}
 		
-		for(Polygon p: currentPolygonsList){
+		for(MyPolygon p: currentPolygonsList){
 			polygonsList.add(p);
 		}
 		
@@ -366,7 +366,7 @@ public class ImagePanel extends JPanel implements MouseListener, MouseMotionList
 			addPolygon("Please enter name for the polygon");
 		}
 		
-		for(Polygon p: currentPolygonsList){
+		for(MyPolygon p: currentPolygonsList){
 			if(!polygonsList.contains(p))
 				polygonsList.add(p);
 		}
@@ -382,7 +382,7 @@ public class ImagePanel extends JPanel implements MouseListener, MouseMotionList
 	    parent.listModel.clear();
 		
 	    int index = 0;
-		for(Polygon p : polygonsList){
+		for(MyPolygon p : polygonsList){
 			if(p.getImageName().equals(imageName)){
 				currentPolygonsList.add(p);
 				parent.listModel.add(index, p.getName());

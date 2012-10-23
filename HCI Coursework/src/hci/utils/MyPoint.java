@@ -6,14 +6,14 @@ package hci.utils;
  *
  */
 //test2
-public class Point {
+public class MyPoint {
 	private int x = 0;
 	private int y = 0;
 	
-	public Point() {
+	public MyPoint() {
 	}
 	
-	public Point(int x, int y) {
+	public MyPoint(int x, int y) {
 		this.x = x;
 		this.y = y;
 	}
