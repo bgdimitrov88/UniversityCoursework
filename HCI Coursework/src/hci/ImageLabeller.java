@@ -242,18 +242,17 @@ public class ImageLabeller extends JFrame {
 								}
 								
 								boolean isPolygonName = true;
+								String polygonName = "";
 								while((currentLine = br.readLine()) != null){
 								if(result == JOptionPane.OK_OPTION){
 										
 										if(isPolygonName){
 											listModel.add(listModel.getSize(), currentLine);
+											polygonName = currentLine;
 										}
 										else{
 											String[] points = currentLine.split(";");
-											
-											//System.out.println(points.length);
-											//for(String s : points){System.out.println(s);}
-											
+																						
 											ArrayList<MyPoint> polygonPoints = new ArrayList<MyPoint>();
 											
 											for(String point : points){
@@ -261,7 +260,7 @@ public class ImageLabeller extends JFrame {
 												polygonPoints.add(new MyPoint(Integer.parseInt(pointXY[0]), Integer.parseInt(pointXY[1])));
 											}
 											
-											imagePanel.currentPolygonsList.add(new MyPolygon(polygonPoints));
+											imagePanel.currentPolygonsList.add(new MyPolygon(polygonPoints, polygonName, imagePanel.image.getName()));
 											
 										}
 										
