@@ -396,6 +396,10 @@ public class ImagePanel extends JPanel implements MouseListener, MouseMotionList
 			addPolygon("Please enter name for the polygon");
 		}
 		
+		/*for(MyPolygon p : polygonsList){
+			System.out.print(p.getName() + " ");
+		}System.out.println();*/
+		
 		for(MyPolygon p: currentPolygonsList){
 			if(!polygonsList.contains(p))
 				polygonsList.add(p);
