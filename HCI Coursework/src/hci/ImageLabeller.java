@@ -123,7 +123,7 @@ public class ImageLabeller extends JFrame {
 
 		//setup main window panel
 		appPanel = new JPanel();
-		helpLabel = new JLabel("Put help here.");
+		helpLabel = new JLabel("Left click to draw polygon. Right click to finish polygon.");
 		pointLabel = new JLabel("X,Y of mouse");
 		labelsListModel = new DefaultListModel();
 		imagesListModel = new DefaultComboBoxModel();
@@ -456,16 +456,16 @@ public class ImageLabeller extends JFrame {
 		appPanel.add(imagePanel, gridBag);
 
 		gridBag.fill = GridBagConstraints.HORIZONTAL;
-		gridBag.weightx = 0.5;
+		gridBag.weightx = 0.2;
 		gridBag.gridx = 0;
 		gridBag.gridy = 2;
-		appPanel.add(pointLabel, gridBag);
+		appPanel.add(helpLabel, gridBag);
 		
 		gridBag.fill = GridBagConstraints.HORIZONTAL;
-		gridBag.weightx = 0.5;
+		gridBag.weightx = 0.8;
 		gridBag.gridx = 3;
 		gridBag.gridy = 2;
-		appPanel.add(helpLabel, gridBag);
+		appPanel.add(pointLabel, gridBag);
 		
 		
 		//display all the stuff
