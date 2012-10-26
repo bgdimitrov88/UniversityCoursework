@@ -359,11 +359,15 @@ public class ImagePanel extends JPanel implements MouseListener, MouseMotionList
 		currentPolygonsList.remove(polygonIndex);
 		parent.labelsListModel.remove(polygonIndex);
 		
+		
+		MyPolygon polygonToRemove = null;
 		for(MyPolygon p : polygonsList){
 			if(p.getName().equals(name) && p.getImageName().equals(image.getName())){
-				polygonsList.remove(p);
+				polygonToRemove = p;
 			}
 		}
+		
+		polygonsList.remove(polygonToRemove);
 		
 		repaint();
 	}
