@@ -51,9 +51,6 @@ public class MyPolygon {
 		
 		MyPolygon cast = (MyPolygon) obj;
 		
-		if(cast == null)
-			return false;
-		
 		if(
 				cast.imageName.equals(this.imageName) 
 				&& 

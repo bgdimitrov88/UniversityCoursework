@@ -22,7 +22,7 @@ import hci.utils.*;
 
 /**
  * Handles image editing panel
- * @author Michal
+ * @author Bogdan Georgios Michal
  *
  */
 public class ImagePanel extends JPanel implements MouseListener, MouseMotionListener {
@@ -102,15 +102,6 @@ public class ImagePanel extends JPanel implements MouseListener, MouseMotionList
 		this(parent);
 		File imgFile = new File(imageName);
 		image = new MyImage(ImageIO.read(imgFile), imgFile.getName());
-		//uneditedImage = HelperMethods.copyImage(image);
-		/*if (image.getImage().getWidth() > 800 || image.getImage().getHeight() > 600) {
-			int newWidth = image.getImage().getWidth() > 800 ? 800 : (image.getImage().getWidth() * 600)/image.getImage().getHeight();
-			int newHeight = image.getImage().getHeight() > 600 ? 600 : (image.getImage().getHeight() * 800)/image.getImage().getWidth();
-			System.out.println("SCALING TO " + newWidth + "x" + newHeight );
-			Image scaledImage = image.getScaledInstance(newWidth, newHeight, Image.SCALE_FAST);
-			image = new BufferedImage(newWidth, newHeight, BufferedImage.TYPE_INT_RGB);
-			image.getGraphics().drawImage(scaledImage, 0, 0, this);
-		}*/
 	}
 	
 	@Override

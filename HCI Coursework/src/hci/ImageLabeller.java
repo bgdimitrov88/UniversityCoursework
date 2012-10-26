@@ -36,7 +36,7 @@ import java.util.ArrayList;
 
 /**
  * Main class of the program - handles display of the main window
- * @author Michal
+ * @author Bogdan Georgios Michal
  *
  */
 public class ImageLabeller extends JFrame {
@@ -80,31 +80,43 @@ public class ImageLabeller extends JFrame {
 	 * image panel - displays image and editing area
 	 */
 	ImagePanel imagePanel = null;
-	
-	/**
-	 * handles New Object button action
-	 */
-	public void addNewPolygon() {
-		//imagePanel.addNewPolygon();
-	}
-	
-	/*@Override
-	public void paint(Graphics g) {
-		super.paint(g);
-		appPanel.paint(g); //update image panel
-	}*/
-	
-	/**
-	 * sets up application window
-	 * @param imageFilename image to be loaded for editing
-	 * @throws Exception
-	 */
-	public void setupGUI(String imageFilename) throws Exception {
+		
+	public void setupGUI() throws Exception {
 		this.addWindowListener(new WindowAdapter() {
 		  	public void windowClosing(WindowEvent event) {
-		  		//here we exit the program (maybe we should ask if the user really wants to do it?)
-		  		//maybe we also want to store the polygons somewhere? and read them next time
-		  		System.out.println("Bye bye!");
+		  		if(imagePanel.image != null){
+		  		
+			  		int result = JOptionPane.showConfirmDialog(ImageLabeller.this, "Do you want to save the labels for this image?", "Save labels for image", JOptionPane.YES_NO_OPTION);
+					
+					if(result == JOptionPane.YES_OPTION){
+						int returnValue = fc.showSaveDialog(ImageLabeller.this);
+						
+						if (returnValue == JFileChooser.APPROVE_OPTION) {
+						        File file = fc.getSelectedFile();
+						        file.setWritable(true);
+						        
+						        try {
+									BufferedWriter br = new BufferedWriter(new FileWriter(file));
+									
+									br.write(imagePanel.image.getName() + "\n");
+									for(MyPolygon p : imagePanel.currentPolygonsList){
+										br.write(p.getName() + "\n");
+										for(MyPoint pt : p.getPoints()){
+											br.write(pt.getX() + "," + pt.getY() + ";");
+										}
+										br.write("\n");
+									}
+									
+									br.flush();
+									br.close();
+									
+								} catch (IOException e1) {
+									// TODO Auto-generated catch block
+									e1.printStackTrace();
+								}
+						    }
+					}
+		  		}
 		    	System.exit(0);
 		  	}
 		});
@@ -130,7 +142,7 @@ public class ImageLabeller extends JFrame {
 		this.setContentPane(appPanel);
 		
         //Create and set up the image panel.
-		imagePanel = new ImagePanel(this);//, imageFilename);
+		imagePanel = new ImagePanel(this);
 		imagePanel.setOpaque(true); //content panes must be opaque
 		
 
@@ -472,7 +484,7 @@ public class ImageLabeller extends JFrame {
 		try {
 			//create a window and display the image
 			ImageLabeller window = new ImageLabeller();
-			window.setupGUI(argv[0]);
+			window.setupGUI();
 		} catch (Exception e) {
 			System.err.println("Image: " + argv[0]);
 			e.printStackTrace();
