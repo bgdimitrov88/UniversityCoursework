@@ -7,6 +7,7 @@ import hci.utils.MyPolygon;
 import javax.swing.BoxLayout;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.DefaultListModel;
+import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JFileChooser;
@@ -50,14 +51,14 @@ public class ImageLabeller extends JFrame {
 	JLabel helpLabel =null;
 	JLabel pointLabel  =null;
 	JList labelList  =null;
-	JButton newRenameButton = null;
-	JButton newEditButton = null;
-	JButton newDeleteButton = null;
-	JButton newSaveButton = null;
-	JButton newLoadButton = null;
-	JButton newCloseButton = null;
-	JComboBox newChooseButton = null;
-	JButton newOpenButton = null;
+	JButton renameLabelButton = null;
+	JButton editLabelButton = null;
+	JButton deleteLabelButton = null;
+	JButton saveLabelsButton = null;
+	JButton loadLabelsButton = null;
+	JButton closeImageButton = null;
+	JComboBox changeImageDropdown = null;
+	JButton openImageButton = null;
 	DefaultListModel labelsListModel = null;
 	DefaultComboBoxModel imagesListModel = null;
 	JFileChooser fc = null;
@@ -116,14 +117,14 @@ public class ImageLabeller extends JFrame {
 		imagesListModel = new DefaultComboBoxModel();
 		labelList = new JList(labelsListModel);
 		fc = new JFileChooser();
-		newRenameButton = new JButton("Rename");
-		newEditButton = new JButton("Edit");
-		newDeleteButton = new JButton("Delete");
-		newSaveButton = new JButton("Save");
-		newLoadButton = new JButton("Load");
-		newCloseButton = new JButton("Remove image from list");
-		newChooseButton = new JComboBox(imagesListModel);
-		newOpenButton = new JButton("Add image to list");
+		renameLabelButton = new JButton("Rename");
+		editLabelButton = new JButton("Edit");
+		deleteLabelButton = new JButton("Delete");
+		saveLabelsButton = new JButton("Save");
+		loadLabelsButton = new JButton("Load");
+		closeImageButton = new JButton("Remove image from list");
+		changeImageDropdown = new JComboBox(imagesListModel);
+		openImageButton = new JButton("Add image to list");
 
 		this.setLayout(new BoxLayout(appPanel, BoxLayout.X_AXIS));
 		this.setContentPane(appPanel);
@@ -142,11 +143,12 @@ public class ImageLabeller extends JFrame {
        
         
         //Add Add button
-		newRenameButton.setMnemonic(KeyEvent.VK_N);
-		newRenameButton.setSize(50, 20);
-		newRenameButton.setEnabled(true);
-		newRenameButton.setToolTipText("Click to Add labels");
-		newRenameButton.addActionListener(new ActionListener() {
+		renameLabelButton.setMnemonic(KeyEvent.VK_N);
+		renameLabelButton.setSize(50, 20);
+		renameLabelButton.setEnabled(true);
+		renameLabelButton.setToolTipText("Click to Add labels");
+		renameLabelButton.setIcon(new ImageIcon("./Rename.png"));
+		renameLabelButton.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				int polygonIndex = (int) labelList.getSelectedIndex();
@@ -155,11 +157,12 @@ public class ImageLabeller extends JFrame {
 		});
 		
         //Add Edit button
-		newEditButton.setMnemonic(KeyEvent.VK_N);
-		newEditButton.setSize(50, 20);
-		newEditButton.setEnabled(true);
-		newEditButton.setToolTipText("Click to edit the selected label");
-		newEditButton.addActionListener(new ActionListener() {
+		editLabelButton.setMnemonic(KeyEvent.VK_N);
+		editLabelButton.setSize(50, 20);
+		editLabelButton.setEnabled(true);
+		editLabelButton.setToolTipText("Click to edit the selected label");
+		editLabelButton.setIcon(new ImageIcon("./Edit.png"));
+		editLabelButton.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				int polygonIndex = (int) labelList.getSelectedIndex();
@@ -168,11 +171,12 @@ public class ImageLabeller extends JFrame {
 		});
 		
         //Add Delete button
-		newDeleteButton.setMnemonic(KeyEvent.VK_N);
-		newDeleteButton.setSize(50, 20);
-		newDeleteButton.setEnabled(true);
-		newDeleteButton.setToolTipText("Click to delete the selected labels");
-		newDeleteButton.addActionListener(new ActionListener() {
+		deleteLabelButton.setMnemonic(KeyEvent.VK_N);
+		deleteLabelButton.setSize(50, 20);
+		deleteLabelButton.setEnabled(true);
+		deleteLabelButton.setToolTipText("Click to delete the selected labels");
+		deleteLabelButton.setIcon(new ImageIcon("./Close.png"));
+		deleteLabelButton.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				int polygonIndex = (int) labelList.getSelectedIndex();
@@ -182,11 +186,12 @@ public class ImageLabeller extends JFrame {
 		
 		
         //Add Save button
-		newSaveButton.setMnemonic(KeyEvent.VK_N);
-		newSaveButton.setSize(50, 20);
-		newSaveButton.setEnabled(true);
-		newSaveButton.setToolTipText("Click to save the current labels");
-		newSaveButton.addActionListener(new ActionListener() {
+		saveLabelsButton.setMnemonic(KeyEvent.VK_N);
+		saveLabelsButton.setSize(50, 20);
+		saveLabelsButton.setEnabled(true);
+		saveLabelsButton.setToolTipText("Click to save the current labels");
+		saveLabelsButton.setIcon(new ImageIcon("./Save.png"));
+		saveLabelsButton.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				int returnValue = fc.showSaveDialog(ImageLabeller.this);
@@ -219,11 +224,12 @@ public class ImageLabeller extends JFrame {
 		});
 		
         //Add Load button
-		newLoadButton.setMnemonic(KeyEvent.VK_N);
-		newLoadButton.setSize(50, 20);
-		newLoadButton.setEnabled(true);
-		newLoadButton.setToolTipText("Click to load labels");
-		newLoadButton.addActionListener(new ActionListener() {
+		loadLabelsButton.setMnemonic(KeyEvent.VK_N);
+		loadLabelsButton.setSize(50, 20);
+		loadLabelsButton.setEnabled(true);
+		loadLabelsButton.setToolTipText("Click to load labels");
+		loadLabelsButton.setIcon(new ImageIcon("./Open.png"));
+		loadLabelsButton.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				int returnValue = fc.showOpenDialog(ImageLabeller.this);
@@ -283,11 +289,12 @@ public class ImageLabeller extends JFrame {
 		
 		
         //Add Chose Close button
-		newCloseButton.setMnemonic(KeyEvent.VK_N);
-		newCloseButton.setSize(50, 20);
-		newCloseButton.setEnabled(true);
-		newCloseButton.setToolTipText("Click to Close Image");
-		newCloseButton.addActionListener(new ActionListener() {
+		closeImageButton.setMnemonic(KeyEvent.VK_N);
+		closeImageButton.setSize(50, 20);
+		closeImageButton.setEnabled(true);
+		closeImageButton.setToolTipText("Click to Close Image");
+		closeImageButton.setIcon(new ImageIcon("./Close.png"));
+		closeImageButton.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				int result = JOptionPane.showConfirmDialog(ImageLabeller.this, "Do you want to save the labels for this image?", "Save labels for image", JOptionPane.YES_NO_OPTION);
@@ -351,10 +358,10 @@ public class ImageLabeller extends JFrame {
 		});
 		
         //Add Chose Image button
-		newChooseButton.setSize(100, 20);
-		newChooseButton.setEnabled(true);
-		newChooseButton.setToolTipText("Choose an image file.");
-		newChooseButton.addActionListener(new ActionListener() {
+		changeImageDropdown.setSize(100, 20);
+		changeImageDropdown.setEnabled(true);
+		changeImageDropdown.setToolTipText("Choose an image file.");
+		changeImageDropdown.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				if(loadingNewImage)
@@ -366,11 +373,12 @@ public class ImageLabeller extends JFrame {
 		
 
         //Add Open Close button
-		newOpenButton.setMnemonic(KeyEvent.VK_N);
-		newOpenButton.setSize(50, 20);
-		newOpenButton.setEnabled(true);
-		newOpenButton.setToolTipText("Click to Open Image");
-		newOpenButton.addActionListener(new ActionListener() {
+		openImageButton.setMnemonic(KeyEvent.VK_N);
+		openImageButton.setSize(50, 20);
+		openImageButton.setEnabled(true);
+		openImageButton.setToolTipText("Click to Open Image");
+		openImageButton.setIcon(new ImageIcon("./Open.png"));
+		openImageButton.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				int returnValue = fc.showOpenDialog(ImageLabeller.this);
@@ -402,15 +410,15 @@ public class ImageLabeller extends JFrame {
 		});
 		
 		imgboxPanel.setLayout(new GridLayout(0,3));
-		imgboxPanel.add(newChooseButton);
-		imgboxPanel.add(newOpenButton);
-		imgboxPanel.add(newCloseButton);
+		imgboxPanel.add(changeImageDropdown);
+		imgboxPanel.add(openImageButton);
+		imgboxPanel.add(closeImageButton);
 		toolboxPanel.setLayout(new GridLayout(5,0));
-		toolboxPanel.add(newRenameButton);
-		toolboxPanel.add(newEditButton);
-		toolboxPanel.add(newDeleteButton);
-		toolboxPanel.add(newLoadButton);
-		toolboxPanel.add(newSaveButton);
+		toolboxPanel.add(renameLabelButton);
+		toolboxPanel.add(editLabelButton);
+		toolboxPanel.add(deleteLabelButton);
+		toolboxPanel.add(loadLabelsButton);
+		toolboxPanel.add(saveLabelsButton);
 		rightPanel.setLayout(new GridLayout(2,0));
 		rightPanel.add(labelList);
 		rightPanel.add(toolboxPanel);
@@ -451,6 +459,7 @@ public class ImageLabeller extends JFrame {
 		//display all the stuff
 		this.pack();
         this.setVisible(true);
+        this.setResizable(false);
 	}
 	
 	
