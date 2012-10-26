@@ -390,7 +390,7 @@ public class ImagePanel extends JPanel implements MouseListener, MouseMotionList
 		
 		parent.labelsListModel.clear();
 		
-		parent.imagesListModel.addElement(newImage.getName());
+		parent.imagesListModel.addElement(newImage.getName().length() > 28 ? newImage.getName().substring(0, 28) + "..." : newImage.getName());
 		parent.imagesListModel.setSelectedItem(newImage.getName());
 		repaint();
 	}
