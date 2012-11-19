@@ -71,7 +71,12 @@ public class RIPSimulator {
 					
 					if(inputData[0].equals("send")){
 						String processName = inputData[1];
-						_commands.add(new Command("send", processName));
+						_commands.add(new Command("send", new String[]{processName}));
+					}
+					else if(inputData[0].equals("link-fail")){
+						String leftNode = inputData[1];
+						String rightNode = inputData[2];
+						_commands.add(new Command("link-fail", new String[]{leftNode, rightNode}));
 					}
 				}
 				s.close();
@@ -80,17 +85,41 @@ public class RIPSimulator {
 			}
 			
 			for(Command c : _commands){
-				String initiatingProcess = c.getProcessName();
+				String[] commandArguments = c.getArguments();
 				
-				NetworkNode initiatingNode = null;
+				NetworkNode node = null;
 				
-				for(NetworkNode n : _networkNodes){
-					if(n.getName().equals(initiatingProcess))
-						initiatingNode = n;
+				if(c.getName().equals("send")){
+					for(NetworkNode n : _networkNodes){
+						if(n.getName().equals(commandArguments[0]))
+							node = n;
+					}
+					
+					if(node != null)
+						node.propagateRoutingTableToLinkedNodes();
 				}
-				
-				if(initiatingNode != null)
-					initiatingNode.propagateRoutingTableToLinkedNodes();
+				else if(c.getName().equals("link-fail")){
+					String leftNode = commandArguments[0];
+					String rightNode = commandArguments[1];
+					
+					System.out.println("link-fail " + leftNode + " " + rightNode);
+					
+					for(NetworkNode n : _networkNodes){
+						if(n.getName().equals(leftNode))
+							node = n;
+					}
+					
+					node.removeLinkedNode(rightNode);
+					
+					System.out.println("link-fail " + rightNode + " " + leftNode);
+					
+					for(NetworkNode n : _networkNodes){
+						if(n.getName().equals(rightNode))
+							node = n;
+					}
+					
+					node.removeLinkedNode(leftNode);
+				}
 			}
 				
 			//Verify input
@@ -121,5 +150,15 @@ public class RIPSimulator {
 					System.out.println();
 				}
 			}*/
+			
+			for(NetworkNode n : _networkNodes){
+				ArrayList<RouterTableRow> nodeRoutingTable = n.getTable();
+				
+				System.out.print("table " + n.getName() + " ");
+				for(RouterTableRow tr : nodeRoutingTable){
+					System.out.print("(" + tr.getDestinationAddress() + "|" + tr.getLinkName() + "|" + tr.getCost() + ") ");					
+				}
+				System.out.println();
+			}
 		}
 }

@@ -2,11 +2,11 @@ package main;
 
 public class Command {
 	private String _commandName;
-	private String _processName;
+	private String[] _arguments;
 	
-	public Command(String commandName, String processName){
+	public Command(String commandName, String[] arguments){
 		_commandName = commandName;
-		_processName = processName;
+		_arguments = arguments;
 	}
 	
 	public String getCommandName(){
@@ -14,8 +14,12 @@ public class Command {
 		
 	}
 	
-	public String getProcessName(){
-		return this._processName;
+	public String[] getArguments(){
+		return this._arguments;
+	}
+	
+	public String getName(){
+		return this._commandName;
 	}
 
 }
