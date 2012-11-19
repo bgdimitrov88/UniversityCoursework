@@ -74,23 +74,34 @@ public class NetworkNode {
 				this.addRoutingTableEntry(address, sender, cost + 1);
 				localTableUpdated = true;
 			}
-			else {
-				//if(localEntryToAddress != null)
+			else{
 				if((cost + 1) < localEntryToAddress.getCost()){
-					localEntryToAddress.setCost(cost);
+					localEntryToAddress.setCost(cost+1);
 					localEntryToAddress.setLinkName(sender);
 					localTableUpdated = true;
 				}
 				
-				
+				if((localEntryToAddress != null) && localEntryToAddress.getLinkName().equals(sender)){
+					if(cost != (localEntryToAddress.getCost()-1)){
+						localEntryToAddress.setCost(cost+1);
+						localTableUpdated = true;
+					}
+				}		
 			}
-			
 		}
 		
 		System.out.println();
 		
-		if(localTableUpdated)
+		if(localTableUpdated){
 			propagateRoutingTableToLinkedNodes();
+		}
+		else {
+			System.out.print("table " + this.getName() + " ");
+			for(RouterTableRow tr : _routerTable){
+				System.out.print("(" + tr.getDestinationAddress() + "|" + tr.getLinkName() + "|" + tr.getCost() + ") ");
+			}
+			System.out.println();
+		}
 	}
 
 }
