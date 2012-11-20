@@ -156,7 +156,7 @@ public class RIPSimulator {
 				
 				System.out.print("table " + n.getName() + " ");
 				for(RouterTableRow tr : nodeRoutingTable){
-					System.out.print("(" + tr.getDestinationAddress() + "|" + tr.getLinkName() + "|" + tr.getCost() + ") ");					
+					System.out.print("(" + tr.getDestinationAddress() + "|" + tr.getLinkName() + "|" + (tr.getCost() == Integer.MAX_VALUE ? "i" : tr.getCost() ) + ") ");					
 				}
 				System.out.println();
 			}
