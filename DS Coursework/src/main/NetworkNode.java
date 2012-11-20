@@ -80,7 +80,6 @@ public class NetworkNode {
 		for(RouterTableRow tr : receivedTable){
 			int address = tr.getDestinationAddress(); 
 			int cost = tr.getCost();
-			String linkName = tr.getLinkName();
 			
 			if(cost != -1){		
 				boolean addressKnown = false;
@@ -131,13 +130,6 @@ public class NetworkNode {
 		if(localTableUpdated){
 			propagateRoutingTableToLinkedNodes();
 		}
-		/*else {
-			System.out.print("table " + this.getName() + " ");
-			for(RouterTableRow tr : _routerTable){
-				System.out.print("(" + tr.getDestinationAddress() + "|" + tr.getLinkName() + "|" + tr.getCost() + ") ");
-			}
-			System.out.println();
-		}*/
 	}
 
 }
