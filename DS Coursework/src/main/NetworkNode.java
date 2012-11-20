@@ -73,14 +73,16 @@ public class NetworkNode {
 		
 		System.out.print("receive " + sender + " " + this.getName() + " ");
 		
+		for(RouterTableRow tr: receivedTable){
+			System.out.print("(" + tr.getDestinationAddress() + "|" + tr.getLinkName() + "|" + tr.getCost() + ")");
+		}
+		
 		for(RouterTableRow tr : receivedTable){
 			int address = tr.getDestinationAddress(); 
 			int cost = tr.getCost();
 			String linkName = tr.getLinkName();
 			
-			if(cost != -1){			
-				System.out.print("(" + address + "|" + linkName + "|" + cost + ")");
-				
+			if(cost != -1){		
 				boolean addressKnown = false;
 				RouterTableRow localEntryToAddress = null;
 				for(RouterTableRow row : _routerTable){
@@ -112,7 +114,7 @@ public class NetworkNode {
 			else {
 				RouterTableRow rowToUpdate = null;
 				for(RouterTableRow row : _routerTable){
-					if(row.getDestinationAddress() == address && row.getLinkName().equals(linkName)){
+					if(row.getDestinationAddress() == address && row.getLinkName().equals(sender)){
 						rowToUpdate = row;
 					}
 				}
