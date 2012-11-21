@@ -1,13 +1,19 @@
 package main;
 
+import generator.InputGenerator;
+
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Random;
 import java.util.Scanner;
 
 public class RIPSimulator {
 	
 		private File _inputFile;
+		public String _inputString;
 		private ArrayList<NetworkNode> _networkNodes;
 		private ArrayList<NetworkLink> _networkLinks;
 		private ArrayList<Command> _commands;
@@ -19,9 +25,34 @@ public class RIPSimulator {
 			_commands = new ArrayList<Command>();
 		}
 		
-		public void runSimulation(){
-			try {
+		public void testInput(){
+			
+			for(int i = 0; i < 2000; i++){
+			_networkNodes.clear();
+			_networkLinks.clear();
+			_commands.clear();
+			InputGenerator generator = new InputGenerator(_inputFile);
+			_inputString = generator.run();
+			
+			/*try {
 				Scanner s = new Scanner(_inputFile);
+				while(s.hasNextLine()){
+					System.out.println(s.nextLine());
+				}
+				s.close();
+			} catch (FileNotFoundException e) {
+				e.printStackTrace();
+			}*/
+			
+			this.runSimulation();
+			
+			}
+		}
+		
+		public void runSimulation(){
+			//try {						
+				
+				Scanner s = new Scanner(_inputString);
 				
 				//Scan the input file line by line and extract the input data
 				while(s.hasNextLine()){
@@ -38,7 +69,7 @@ public class RIPSimulator {
 						}
 						
 						//Create new node
-						NetworkNode newNetworkNode = new NetworkNode(nodeName, nodeAddresses);
+						NetworkNode newNetworkNode = new NetworkNode(nodeName, nodeAddresses, this);
 						
 						//Add entries in node's routing table for its own local addresses
 						for(int i = 0; i < nodeAddresses.length; i++){
@@ -87,9 +118,12 @@ public class RIPSimulator {
 					}
 				}
 				s.close();
-			} catch (FileNotFoundException e) {
+			/*} catch (FileNotFoundException e) {
 				System.out.println("The specified file was not found.");
-			}
+			} catch (IOException e){
+				e.printStackTrace();
+			}*/
+			
 			
 			//Execute the commands
 			for(Command c : _commands){
@@ -135,6 +169,18 @@ public class RIPSimulator {
 			}
 			
 			//Print final status of nodes' tables
+			for(NetworkNode n : _networkNodes){
+				ArrayList<RouterTableRow> nodeRoutingTable = n.getTable();
+				
+				System.out.print("table " + n.getName() + " ");
+				for(RouterTableRow tr : nodeRoutingTable){
+					System.out.print("(" + tr.getDestinationAddress() + "|" + (tr.getCost() == Integer.MAX_VALUE ? "no-link" : tr.getLinkName()) + "|" + (tr.getCost() == Integer.MAX_VALUE ? "i" : tr.getCost() ) + ") ");					
+				}
+				System.out.println();
+			}
+		}
+		
+		public void printFinalTablesContent(){
 			for(NetworkNode n : _networkNodes){
 				ArrayList<RouterTableRow> nodeRoutingTable = n.getTable();
 				

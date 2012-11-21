@@ -7,8 +7,10 @@ public class NetworkNode {
 	private int[] _addresses;
 	private ArrayList<RouterTableRow> _routerTable;
 	private ArrayList<NetworkNode> _linkedNodes;
+	private RIPSimulator _parent;
 	
-	public NetworkNode(String name, int[] addresses){
+	public NetworkNode(String name, int[] addresses, RIPSimulator parent){
+		_parent = parent;
 		_name = name;
 		_addresses = addresses;
 		_linkedNodes = new ArrayList<NetworkNode>();
@@ -79,7 +81,12 @@ public class NetworkNode {
 	
 	public void updateRoutingTable(String sender, ArrayList<RouterTableRow> receivedTable){
 		boolean localTableUpdated = false;
-		
+		//System.out.println("This is: " + this._name);
+		//System.out.println("Received table from: " + sender);
+		System.out.println(_parent._inputString);
+		_parent.printFinalTablesContent();
+		/*System.out.println("Router table size: " + _routerTable.size());
+		System.out.println("Linked nodes size: " + _linkedNodes.size());*/
 		//Print what is received
 		System.out.print("receive " + sender + " " + this.getName() + " ");	
 		for(RouterTableRow tr: receivedTable){
@@ -123,8 +130,12 @@ public class NetworkNode {
 					if(localEntryToAddress.getLinkName().equals(sender)){
 						//And the sender has found a better route update it
 						if(cost != (localEntryToAddress.getCost()-1)){
+							//System.out.println("\nUpdating address: " + localEntryToAddress.getDestinationAddress() + " throught: " + localEntryToAddress.getLinkName() + " currentCost: " + localEntryToAddress.getCost() + " receivedCost: " + cost);
 							localEntryToAddress.setCost(cost+1);
 							localTableUpdated = true;
+							
+							/*if(localEntryToAddress.getCost() > 1000)
+								localTableUpdated = false;*/
 						}
 					}		
 				}
@@ -142,14 +153,14 @@ public class NetworkNode {
 				
 				//If there is such a route make it invalid
 				if(rowToUpdate != null){
-					rowToUpdate.setCost(-1);
+					rowToUpdate.setCost(Integer.MAX_VALUE);
 					localTableUpdated = true;
 				}
 				
 				//If there is no such route, but the current node has another working route to that address
 				//Send it back to the sender node
 				
-				else {
+				/*else {
 					for(RouterTableRow row : _routerTable){
 						if(row.getDestinationAddress() == address && row.getCost() != Integer.MAX_VALUE){
 							rowToUpdate = row;
@@ -159,7 +170,7 @@ public class NetworkNode {
 					if(rowToUpdate != null){
 						localTableUpdated = true;
 					}
-				}
+				}*/
 			}
 		}
 		
