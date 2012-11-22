@@ -1,15 +1,27 @@
-node p0 0
-node p1 1
-node p2 2
-node p3 3
-node p4 4
-link p3 p4
-link p3 p0
-link p4 p0
-link p4 p1
-link p1 p2
-link p4 p2
+node p0 1 2
+node p1 3 4
+node p2 5 6 7
+node p3 8
+node p4 9 10 11
+node p5 12
+node p6 13 14
+node p7 15 16
+link p0 p3
+link p0 p5
+link p0 p1
 link p1 p3
-send p0
-link-fail p3 p1
-link-fail p0 p4
+link p1 p5
+link p1 p7
+link p1 p0
+link p2 p7
+link p3 p4
+link p3 p6
+link p4 p5
+link p4 p7
+link p5 p3
+link p6 p5
+link p6 p4
+link p7 p3
+send p1
+link-fail p0 p5
+link-fail p7 p3

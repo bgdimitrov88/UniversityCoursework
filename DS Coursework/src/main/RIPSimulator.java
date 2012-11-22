@@ -4,7 +4,6 @@ import generator.InputGenerator;
 
 import java.io.File;
 import java.io.FileNotFoundException;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Scanner;
 
@@ -25,12 +24,13 @@ public class RIPSimulator {
 		
 		public void testInput(){
 			
-			for(int i = 0; i < 2000; i++){
+			for(int i = 0; i < 10000; i++){
 			_networkNodes.clear();
 			_networkLinks.clear();
 			_commands.clear();
 			InputGenerator generator = new InputGenerator(_inputFile);
-			System.out.println(_inputString = generator.run());
+			_inputString = generator.run();
+			System.out.println(_inputString);
 			
 			/*try {
 				Scanner s = new Scanner(_inputFile);
@@ -118,9 +118,7 @@ public class RIPSimulator {
 				s.close();
 			} catch (FileNotFoundException e) {
 				System.out.println("The specified file was not found.");
-			} catch (IOException e){
-				e.printStackTrace();
-			}
+			} 
 			
 			/*for(NetworkNode n : _networkNodes){
 				System.out.print("Node order: ");

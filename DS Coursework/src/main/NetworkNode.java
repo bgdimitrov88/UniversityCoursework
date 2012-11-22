@@ -6,7 +6,7 @@ public class NetworkNode {
 	private String _name;
 	private int[] _addresses;
 	private ArrayList<RouterTableRow> _routerTable;
-	public ArrayList<NetworkNode> _linkedNodes;
+	private ArrayList<NetworkNode> _linkedNodes;
 	private RIPSimulator _parent;
 	
 	public NetworkNode(String name, int[] addresses, RIPSimulator parent){
@@ -101,8 +101,8 @@ public class NetworkNode {
 		boolean localTableUpdated = false;
 		//System.out.println("This is: " + this._name);
 		//System.out.println("Received table from: " + sender);
-		System.out.println(_parent._inputString);
-		_parent.printFinalTablesContent();
+		//System.out.println(_parent._inputString);
+		//_parent.printFinalTablesContent();
 		/*System.out.println("Router table size: " + _routerTable.size());
 		System.out.println("Linked nodes size: " + _linkedNodes.size());*/
 		//Print what is received
@@ -147,7 +147,10 @@ public class NetworkNode {
 					//If the current node already has a route to that address through the sender
 					if(localEntryToAddress.getLinkName().equals(sender)){
 						//And the sender has found a better route update it
-						if(cost != (localEntryToAddress.getCost()-1)){
+						if(cost != (localEntryToAddress.getCost()-1) && cost < localEntryToAddress.getCost()){
+							//System.out.println(_parent._inputString);
+							//System.out.println();
+							//_parent.printFinalTablesContent();
 							//System.out.println("This is: " + this._name);
 							//System.out.println("\nUpdating address: " + localEntryToAddress.getDestinationAddress() + " throught: " + localEntryToAddress.getLinkName() + " currentCost: " + localEntryToAddress.getCost() + " receivedCost: " + cost);
 							localEntryToAddress.setCost(cost+1);
@@ -175,21 +178,6 @@ public class NetworkNode {
 					rowToUpdate.setCost(Integer.MAX_VALUE);
 					localTableUpdated = true;
 				}
-				
-				//If there is no such route, but the current node has another working route to that address
-				//Send it back to the sender node
-				
-				/*else {
-					for(RouterTableRow row : _routerTable){
-						if(row.getDestinationAddress() == address && row.getCost() != Integer.MAX_VALUE){
-							rowToUpdate = row;
-						}
-					}
-					
-					if(rowToUpdate != null){
-						localTableUpdated = true;
-					}
-				}*/
 			}
 		}
 		
