@@ -6,7 +6,7 @@ public class NetworkNode {
 	private String _name;
 	private int[] _addresses;
 	private ArrayList<RouterTableRow> _routerTable;
-	private ArrayList<NetworkNode> _linkedNodes;
+	public ArrayList<NetworkNode> _linkedNodes;
 	private RIPSimulator _parent;
 	
 	public NetworkNode(String name, int[] addresses, RIPSimulator parent){
@@ -34,7 +34,25 @@ public class NetworkNode {
 	}
 	
 	public void addLinkedNode(NetworkNode linkedNode){
-		this._linkedNodes.add(linkedNode);
+		/*char newNode = linkedNode.getName().toCharArray()[1];
+		
+		int indexToInsert = 200;
+		boolean indexChanged = false;
+		
+		for(int i = 0; i < _linkedNodes.size(); i++){
+			if(Integer.parseInt(Character.toString(newNode)) < Integer.parseInt(Character.toString(_linkedNodes.get(i).getName().toCharArray()[1]))){
+							
+							if(i < indexToInsert){
+								indexToInsert = i;
+								indexChanged = true;
+							}
+						}
+		}
+		
+		if(indexChanged)
+			_linkedNodes.add(indexToInsert, linkedNode);
+		else*/
+			this._linkedNodes.add(linkedNode);
 	}
 	
 	public void removeLinkedNode(String linkedNodeName){
@@ -130,11 +148,12 @@ public class NetworkNode {
 					if(localEntryToAddress.getLinkName().equals(sender)){
 						//And the sender has found a better route update it
 						if(cost != (localEntryToAddress.getCost()-1)){
+							//System.out.println("This is: " + this._name);
 							//System.out.println("\nUpdating address: " + localEntryToAddress.getDestinationAddress() + " throught: " + localEntryToAddress.getLinkName() + " currentCost: " + localEntryToAddress.getCost() + " receivedCost: " + cost);
 							localEntryToAddress.setCost(cost+1);
 							localTableUpdated = true;
 							
-							/*if(localEntryToAddress.getCost() > 1000)
+							/*if(localEntryToAddress.getCost() > 10 && localEntryToAddress.getCost() != Integer.MAX_VALUE)
 								localTableUpdated = false;*/
 						}
 					}		

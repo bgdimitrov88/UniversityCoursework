@@ -4,10 +4,8 @@ import generator.InputGenerator;
 
 import java.io.File;
 import java.io.FileNotFoundException;
-import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Random;
 import java.util.Scanner;
 
 public class RIPSimulator {
@@ -32,7 +30,7 @@ public class RIPSimulator {
 			_networkLinks.clear();
 			_commands.clear();
 			InputGenerator generator = new InputGenerator(_inputFile);
-			_inputString = generator.run();
+			System.out.println(_inputString = generator.run());
 			
 			/*try {
 				Scanner s = new Scanner(_inputFile);
@@ -50,9 +48,9 @@ public class RIPSimulator {
 		}
 		
 		public void runSimulation(){
-			//try {						
+			try {						
 				
-				Scanner s = new Scanner(_inputString);
+				Scanner s = new Scanner(_inputFile);
 				
 				//Scan the input file line by line and extract the input data
 				while(s.hasNextLine()){
@@ -118,12 +116,19 @@ public class RIPSimulator {
 					}
 				}
 				s.close();
-			/*} catch (FileNotFoundException e) {
+			} catch (FileNotFoundException e) {
 				System.out.println("The specified file was not found.");
 			} catch (IOException e){
 				e.printStackTrace();
-			}*/
+			}
 			
+			/*for(NetworkNode n : _networkNodes){
+				System.out.print("Node order: ");
+				for(NetworkNode tr : n._linkedNodes){
+					System.out.print(tr.getName() + " ");
+				}
+				System.out.println();
+			}*/
 			
 			//Execute the commands
 			for(Command c : _commands){
@@ -143,6 +148,7 @@ public class RIPSimulator {
 				}
 				//If 'link-fail' command remove each node at either side of the link from the other side's list of linked nodes
 				else if(c.getName().equals("link-fail")){
+					//printFinalTablesContent();
 					String leftNode = commandArguments[0];
 					String rightNode = commandArguments[1];
 					
@@ -155,7 +161,8 @@ public class RIPSimulator {
 					
 					//The removal of a link causes the node to send its table to all neighbouring nodes - see NetworkNode class
 					node.removeLinkedNode(rightNode);
-					
+
+					//printFinalTablesContent();
 					System.out.println("link-fail " + rightNode + " " + leftNode);
 					
 					for(NetworkNode n : _networkNodes){

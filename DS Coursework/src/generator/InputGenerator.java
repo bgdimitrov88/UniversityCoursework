@@ -9,7 +9,7 @@ import java.util.Random;
 import java.lang.StringBuilder;
 
 public class InputGenerator {
-File _inputFile;
+	File _inputFile;
 	
 	public InputGenerator(File f){
 		_inputFile = f;
@@ -76,7 +76,7 @@ File _inputFile;
 			}
 			
 			//Check if all possible combinations have been added
-			for(String node : generatedNodes){
+			/*for(String node : generatedNodes){
 				boolean nodePresentInLinks = false;
 				for(String link : generatedLinks){
 					if(link.contains(node))
@@ -85,7 +85,7 @@ File _inputFile;
 				
 				if(nodePresentInLinks)
 					stopAddingLinks = false;
-			}
+			}*/
 			
 		}
 		
@@ -113,49 +113,54 @@ File _inputFile;
 		
 		for(int i = 0; i < iterations; i++){
 			boolean successfullyAdded = false;
-			while(!successfullyAdded){
-				int leftNode = r.nextInt(generatedNodes.size());
-				int rightNode = leftNode;
-				while(rightNode == leftNode){
-					rightNode = r.nextInt(generatedNodes.size());
-				}
-				
-				String s = "link-fail " + "p" + leftNode + " p" + rightNode + "\n";
-				String sLink = "link " + "p" + leftNode + " p" + rightNode + "\n";
-				String reverse = "link-fail " + "p" + rightNode + " p" + leftNode + "\n";
-				String reverseLink = "link " + "p" + rightNode + " p" + leftNode + "\n";
-				//System.out.println("Trying: " + s);
-				if(!generatedFailedLinks.contains(s) && !generatedFailedLinks.contains(reverse)){
-					if(generatedLinks.contains(sLink) || generatedLinks.contains(reverseLink)){
-						if(generatedLinks.contains(sLink))
-							generatedLinks.remove(sLink);
-						
-						if(generatedLinks.contains(reverseLink))
-							generatedLinks.remove(reverseLink);
-						
+			while(!successfullyAdded && ( generatedLinks.size() > getLeastPossibleLinks(generatedNodes.size()))){
+			    int leftNode = r.nextInt(generatedNodes.size());
+			    int rightNode = leftNode;
+			    while(rightNode == leftNode){
+				    rightNode = r.nextInt(generatedNodes.size());
+			    }
+			
+			    String s = "link-fail " + "p" + leftNode + " p" + rightNode + "\n";
+			    String sLink = "link " + "p" + leftNode + " p" + rightNode + "\n";
+			    String reverse = "link-fail " + "p" + rightNode + " p" + leftNode + "\n";
+			    String reverseLink = "link " + "p" + rightNode + " p" + leftNode + "\n";
+			    //System.out.println("Trying: " + s);
+			    if(!generatedFailedLinks.contains(s) && !generatedFailedLinks.contains(reverse)){
+				    if(generatedLinks.contains(sLink) || generatedLinks.contains(reverseLink)){
 
-						boolean thereIsACutoutNode = false;
-						for(String node : generatedNodes){
-							boolean nodeNotPresentInLinks = false;
-							for(String link : generatedLinks){
-								if(link.contains(node))
-									nodeNotPresentInLinks = true;
-							}
-							
-							if(nodeNotPresentInLinks)
-								thereIsACutoutNode = true;
-						}
-						
-						if(!thereIsACutoutNode){
-							generatedFailedLinks.add(s);
-							successfullyAdded = true;
-						}
-						else{
-							iterations++;
-						}
-					}
-				}
-			}
+                        boolean thereIsACutoutNode = false;
+                        int leftLinkCount = 0;
+                        int rightLinkCount = 0;
+
+                        for (String link : generatedLinks)
+                        {
+                            if (link.contains("p" + leftNode))
+                                leftLinkCount++;
+
+                            if (link.contains("p" + rightNode))
+                                rightLinkCount++;
+                        }
+
+                        if (leftLinkCount == 1 || rightLinkCount == 1)
+                            thereIsACutoutNode = true;
+					
+					    if(thereIsACutoutNode){
+						    iterations++;
+					    }
+                        else
+                        {
+                            if (generatedLinks.contains(sLink))
+                                generatedLinks.remove(sLink);
+
+                            if (generatedLinks.contains(reverseLink))
+                                generatedLinks.remove(reverseLink);
+
+						    generatedFailedLinks.add(s);
+						    successfullyAdded = true;
+					    }
+				    }
+			    }
+		    }
 		}
 		
 		for(String failedLink : generatedFailedLinks){
