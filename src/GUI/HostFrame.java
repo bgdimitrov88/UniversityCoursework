@@ -19,21 +19,20 @@ import javax.swing.*;
  */
 public class HostFrame extends JFrame implements ActionListener{
 
-    private static HostFrame hostFrame;
-    private static JLabel portLabel = new JLabel("Host port: ");
-    private static JLabel nicknameLabel = new JLabel("Your nick: ");
-    private static JTextField portField = new JTextField();
-    private static JTextField nicknameField = new JTextField();
-    private static JButton okButton = new JButton("OK");
-    private static JButton cancelButton = new JButton("Cancel");
+    private final JLabel portLabel = new JLabel("Host port: ");
+    private final JLabel nicknameLabel = new JLabel("Your nick: ");
+    private final JTextField portField = new JTextField();
+    private final JTextField nicknameField = new JTextField();
+    private final JButton okButton = new JButton("OK");
+    private final JButton cancelButton = new JButton("Cancel");
 
-    private HostFrame(String name) {
+    public HostFrame(String name) {
 
         //initialize components
         super(name);
         this.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         this.setLayout(null);
-        this.setVisible(true);
+        this.setVisible(false);
         this.setSize(200,130);
         this.setResizable(false);
 
@@ -52,20 +51,6 @@ public class HostFrame extends JFrame implements ActionListener{
         this.add(nicknameField);
         this.add(okButton);
         this.add(cancelButton);
-    }
-
-    /**
-     * Singleton design pattern method, gets the instance of HostFrame
-     *
-     * @return The single instance of HostFrame
-     */
-    public static HostFrame getHostFrame() {
-        if(hostFrame == null) {
-            return new HostFrame("Host game");
-        }
-        else {
-            return hostFrame;
-        }
     }
 
     /**

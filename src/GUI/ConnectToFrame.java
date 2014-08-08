@@ -19,22 +19,21 @@ import javax.swing.*;
  *
  */
 public class ConnectToFrame extends JFrame implements ActionListener {
+    
+    private JLabel hostIPLabel = new JLabel("Host IP: ");
+    private JLabel hostPortLabel = new JLabel("Host port: ");
+    private JLabel nicknameLabel = new JLabel("Your nick: ");
+    private JTextField hostIPField = new JTextField();
+    private JTextField hostPortField = new JTextField();
+    private JTextField nicknameField = new JTextField();
+    private JButton okButton = new JButton("OK");
+    private JButton cancelButton = new JButton("Cancel");
 
-    private static ConnectToFrame connectionFrame;
-    private static JLabel hostIPLabel = new JLabel("Host IP: ");
-    private static JLabel hostPortLabel = new JLabel("Host port: ");
-    private static JLabel nicknameLabel = new JLabel("Your nick: ");
-    private static JTextField hostIPField = new JTextField();
-    private static JTextField hostPortField = new JTextField();
-    private static JTextField nicknameField = new JTextField();
-    private static JButton okButton = new JButton("OK");
-    private static JButton cancelButton = new JButton("Cancel");
-
-    private ConnectToFrame(String name){
+    public ConnectToFrame(String name){
         super(name);
         this.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         this.setLayout(null);
-        this.setVisible(true);
+        this.setVisible(false);
         this.setSize(200,170);
         this.setResizable(false);
 
@@ -57,21 +56,6 @@ public class ConnectToFrame extends JFrame implements ActionListener {
         this.add(nicknameField);
         this.add(okButton);
         this.add(cancelButton);
-    }
-
-
-    /**
-     * Singleton design pattern method, gets the instance of ConnectToFrame
-     *
-     * @return The single instance of ConnectToFrame
-     */
-    public static ConnectToFrame getConnectToFrame() {
-        if(connectionFrame == null) {
-            return new ConnectToFrame("ConnectTo");
-        }
-        else {
-            return connectionFrame;
-        }
     }
 
     /**
