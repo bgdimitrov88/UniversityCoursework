@@ -24,19 +24,22 @@ import javax.swing.plaf.basic.BasicScrollPaneUI;
  */
 public class GameFrame implements ActionListener{
 
-    private JFrame gameWindow;
-    private JPanel gamePanel;
-    private JMenuBar menuBar;
-    private JMenu gameMenu;
-    private JMenuItem hostMenuItem;
-    private JMenuItem connectMenuItem;
-    private JMenuItem exitMenuItem;
+    private final JFrame gameWindow;
+    private final JPanel gamePanel;
+    private final JMenuBar menuBar;
+    private final JMenu gameMenu;
+    private final JMenuItem hostMenuItem;
+    private final JMenuItem connectMenuItem;
+    private final JMenuItem exitMenuItem;
     private static JTextArea chatArea;
     private static JScrollPane chatPane;
     private static JButton[] buttons;
     private JTextField chatInputField;
-    private JButton sendButton;
-    private JButton newGameButton;
+    private final JButton sendButton;
+    private final JButton newGameButton;
+    
+    private final ConnectToFrame connectToFrame;
+    private final HostFrame hostFrame;
 
     /**
      * Constructs a new GameFrame object and initializes it's components.
@@ -118,6 +121,9 @@ public class GameFrame implements ActionListener{
         gameWindow.add(chatInputField);
         gameWindow.add(sendButton);
         gameWindow.add(newGameButton);
+        
+        connectToFrame = new ConnectToFrame("Connect to Host");
+        hostFrame = new HostFrame("Host a game");
     }
 
     /**
@@ -153,12 +159,12 @@ public class GameFrame implements ActionListener{
 
         //open Connection frame
         if(clickedItem == connectMenuItem){
-            ConnectToFrame.getConnectToFrame();
+            connectToFrame.setVisible(true);
         }
 
         //open Host frame
         if(clickedItem == hostMenuItem) {
-            HostFrame.getHostFrame();
+            hostFrame.setVisible(true);
         }
 
         //exit application
