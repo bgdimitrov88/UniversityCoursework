@@ -1,5 +1,6 @@
 package GUI;
 
+import Game.Game;
 import Networking.ClientThread;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -22,8 +23,9 @@ public class ConnectToFrame extends JFrame implements ActionListener {
     private final JButton okButton = new JButton("OK");
     private final JButton cancelButton = new JButton("Cancel");
     private final GameFrame gameFrame;
+    private final Game game;
 
-    public ConnectToFrame(String name, GameFrame gameFrame){
+    public ConnectToFrame(String name, GameFrame gameFrame, Game game){
         super(name);
         this.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         this.setLayout(null);
@@ -48,6 +50,7 @@ public class ConnectToFrame extends JFrame implements ActionListener {
         this.add(cancelButton);
         
         this.gameFrame = gameFrame;
+        this.game = game;
     }
 
     /**
@@ -57,7 +60,7 @@ public class ConnectToFrame extends JFrame implements ActionListener {
      */
     public void actionPerformed(ActionEvent e) {
         if(e.getSource() == okButton){
-            ClientThread client = new ClientThread(hostIPField.getText(), nicknameField.getText(), gameFrame);
+            ClientThread client = new ClientThread(hostIPField.getText(), nicknameField.getText(), gameFrame, game);
             new Thread(client).start();
             this.dispose();
         }

@@ -7,13 +7,13 @@ package Game;
  */
 public class Game {
 
-    private static String message;
-    private static String move;
-    private static boolean sendMsg = false;
-    private static boolean sendMove = false;
-    private static char[] grid;
-    private static boolean myTurn = false;
-    private static boolean iAmX = false;
+    private String message;
+    private String move;
+    private boolean sendMsg = false;
+    private boolean sendMove = false;
+    private char[] grid;
+    private boolean myTurn = false;
+    private boolean iAmX = false;
 
     private final int[][] winCombinations = new int[][]{
         {0, 1, 2}, {3, 4, 5}, {6, 7, 8}, //horizontal wins
@@ -53,7 +53,7 @@ public class Game {
      *
      * @return whose turn it is
      */
-    public static boolean isMyTurn() {
+    public boolean isMyTurn() {
         return myTurn;
     }
 
@@ -62,8 +62,8 @@ public class Game {
      *
      * @param myTurn is it the user's turn
      */
-    public static void setMyTurn(boolean myTurn) {
-        Game.myTurn = myTurn;
+    public void setMyTurn(boolean myTurn) {
+        this.myTurn = myTurn;
     }
 
     /**
@@ -71,7 +71,7 @@ public class Game {
      *
      * @return should a message be send
      */
-    public static boolean isSendMsg() {
+    public boolean isSendMsg() {
         return sendMsg;
     }
 
@@ -80,8 +80,8 @@ public class Game {
      *
      * @param sendMsg is a message waiting to be send
      */
-    public static void setSendMsg(boolean sendMsg) {
-        Game.sendMsg = sendMsg;
+    public void setSendMsg(boolean sendMsg) {
+        this.sendMsg = sendMsg;
     }
 
     /**
@@ -89,7 +89,7 @@ public class Game {
      *
      * @return the message to be send
      */
-    public static String getMessage() {
+    public String getMessage() {
         return message;
     }
 
@@ -98,8 +98,8 @@ public class Game {
      *
      * @param message the message to be send
      */
-    public static void setMessage(String message) {
-        Game.message = message;
+    public void setMessage(String message) {
+        this.message = message;
     }
 
     /**
@@ -107,7 +107,7 @@ public class Game {
      *
      * @return player's move
      */
-    public static String getMove() {
+    public String getMove() {
         return move;
     }
 
@@ -116,8 +116,8 @@ public class Game {
      *
      * @param move player's move
      */
-    public static void setMove(String move) {
-        Game.move = move;
+    public void setMove(String move) {
+        this.move = move;
     }
 
     /**
@@ -125,7 +125,7 @@ public class Game {
      *
      * @return should a move be send
      */
-    public static boolean isSendMove() {
+    public boolean isSendMove() {
         return sendMove;
     }
 
@@ -134,8 +134,8 @@ public class Game {
      *
      * @param sendMove is a move waiting to be send
      */
-    public static void setSendMove(boolean sendMove) {
-        Game.sendMove = sendMove;
+    public void setSendMove(boolean sendMove) {
+        this.sendMove = sendMove;
     }
 
     /**
@@ -144,7 +144,7 @@ public class Game {
      * @param i grid cell to be changed
      * @param value value to which the grid cell will be changed
      */
-    public static void changeBoard(int i, char value) {
+    public void changeBoard(int i, char value) {
         grid[i] = value;
     }
 
@@ -153,7 +153,7 @@ public class Game {
      *
      * @return the game grid
      */
-    public static char[] getGrid() {
+    public char[] getGrid() {
         return grid;
     }
 
@@ -162,7 +162,7 @@ public class Game {
      *
      * @return is the player an O or a X
      */
-    public static boolean isiAmX() {
+    public boolean isiAmX() {
         return iAmX;
     }
 
@@ -171,14 +171,14 @@ public class Game {
      *
      * @param iAmX is the player using X
      */
-    public static void setiAmX(boolean iAmX) {
-        Game.iAmX = iAmX;
+    public void setiAmX(boolean iAmX) {
+        this.iAmX = iAmX;
     }
 
     /**
      * Clears the game grid
      */
-    public static void clearGrid() {
+    public void clearGrid() {
         for(int i = 0; i < 9; i++){
             grid[i] = 'E';
         }

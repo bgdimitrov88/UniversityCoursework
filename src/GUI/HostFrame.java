@@ -1,5 +1,6 @@
 package GUI;
 
+import Game.Game;
 import Networking.ServerThread;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -20,8 +21,9 @@ public class HostFrame extends JFrame implements ActionListener{
     private final JButton cancelButton = new JButton("Cancel");
     
     private final GameFrame gameFrame;
+    private final Game game;
 
-    public HostFrame(String name, GameFrame gameFrame) {
+    public HostFrame(String name, GameFrame gameFrame, Game game) {
 
         //initialize components
         super(name);
@@ -44,6 +46,7 @@ public class HostFrame extends JFrame implements ActionListener{
         this.add(cancelButton);
         
         this.gameFrame = gameFrame;
+        this.game = game;
     }
 
     /**
@@ -53,7 +56,7 @@ public class HostFrame extends JFrame implements ActionListener{
      */
     public void actionPerformed(ActionEvent e) {
         if(e.getSource() == okButton){
-            ServerThread serverThread = new ServerThread(nicknameField.getText(), gameFrame);
+            ServerThread serverThread = new ServerThread(nicknameField.getText(), gameFrame, game);
             new Thread(serverThread).start();
             this.dispose();
         }

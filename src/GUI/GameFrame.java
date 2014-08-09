@@ -35,6 +35,7 @@ public class GameFrame implements ActionListener{
     
     private final ConnectToFrame connectToFrame;
     private final HostFrame hostFrame;
+    private final Game game;
 
     /**
      * Constructs a new GameFrame object and initializes it's components.
@@ -42,6 +43,7 @@ public class GameFrame implements ActionListener{
     public GameFrame() {
 
         //initialize components
+        game = new Game();
         gameWindow = new JFrame("TicTacToe");
         gameWindow.setSize(400,440);
         gameWindow.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -93,8 +95,8 @@ public class GameFrame implements ActionListener{
             }
             public void keyPressed(KeyEvent e) {
                 if(e.getKeyCode() == KeyEvent.VK_ENTER) {
-                    Game.setMessage(chatInputField.getText());
-                    Game.setSendMsg(true);
+                    game.setMessage(chatInputField.getText());
+                    game.setSendMsg(true);
                     chatInputField.setText("");
                 }
             }
@@ -117,8 +119,8 @@ public class GameFrame implements ActionListener{
         gameWindow.add(sendButton);
         gameWindow.add(newGameButton);
         
-        connectToFrame = new ConnectToFrame("Connect to Host", this);
-        hostFrame = new HostFrame("Host a game", this);
+        connectToFrame = new ConnectToFrame("Connect to Host", this, game);
+        hostFrame = new HostFrame("Host a game", this, game);
     }
 
     /**
@@ -133,20 +135,20 @@ public class GameFrame implements ActionListener{
 
         //change button state and send move
         for(int i = 0; i < 9; i++) {
-            if(clickedItem == buttons[i] && (Game.getGrid()[i] == 'E') && Game.isMyTurn()) {
+            if(clickedItem == buttons[i] && (game.getGrid()[i] == 'E') && game.isMyTurn()) {
                 //JOptionPane.showMessageDialog(null, "Clicked button " + i + j);
-                if(Game.isiAmX()) {
-                    Game.changeBoard(i, 'X');
-                    Game.setMove("#" + i );
-                    Game.setSendMove(true);
-                    Game.setMyTurn(false);
+                if(game.isiAmX()) {
+                    game.changeBoard(i, 'X');
+                    game.setMove("#" + i );
+                    game.setSendMove(true);
+                    game.setMyTurn(false);
                     buttons[i].setText("X");
                 }
                 else {
-                    Game.changeBoard(i,'O');
-                    Game.setMove("#" + i);
-                    Game.setSendMove(true);
-                    Game.setMyTurn(false);
+                    game.changeBoard(i,'O');
+                    game.setMove("#" + i);
+                    game.setSendMove(true);
+                    game.setMyTurn(false);
                     buttons[i].setText("O");
                 }
             }
@@ -169,17 +171,17 @@ public class GameFrame implements ActionListener{
 
         //send chat message
         if(clickedItem == sendButton) {
-            Game.setMessage(chatInputField.getText());
-            Game.setSendMsg(true);
+            game.setMessage(chatInputField.getText());
+            game.setSendMsg(true);
             chatInputField.setText("");
         }
 
         //start new game
         try {
             if(clickedItem == newGameButton) {
-                Game.clearGrid();
-                Game.setMove("#N");
-                Game.setSendMove(true);
+                clearGrid();
+                game.setMove("#N");
+                game.setSendMove(true);
             }
         } catch(NullPointerException exc) {
             JOptionPane.showMessageDialog(null, "No opponent yet");
@@ -208,6 +210,8 @@ public class GameFrame implements ActionListener{
         for(int i = 0; i < buttons.length; i++){
             buttons[i].setText("");
         }
+        
+        game.clearGrid();
     }
     
     /**
