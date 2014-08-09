@@ -1,11 +1,4 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
 package Game;
-
-import GUI.GameFrame;
-import javax.swing.JButton;
 
 /**
  *The Game class holds the game grid and all the methods used to manipulate it.
@@ -22,7 +15,7 @@ public class Game {
     private static boolean myTurn = false;
     private static boolean iAmX = false;
 
-    private int[][] winCombinations = new int[][]{
+    private final int[][] winCombinations = new int[][]{
         {0, 1, 2}, {3, 4, 5}, {6, 7, 8}, //horizontal wins
         {0, 3, 6}, {1, 4, 7}, {2, 5, 8}, //virticle wins
         {0, 4, 8}, {2, 4, 6} //diagonal wins };
@@ -186,10 +179,8 @@ public class Game {
      * Clears the game grid
      */
     public static void clearGrid() {
-        JButton[] resetBtn = GameFrame.getButtons();
         for(int i = 0; i < 9; i++){
             grid[i] = 'E';
-            resetBtn[i].setText("");
         }
     }
 }

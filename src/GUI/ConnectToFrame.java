@@ -1,8 +1,3 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
-
 package GUI;
 
 import Networking.ClientThread;
@@ -20,42 +15,39 @@ import javax.swing.*;
  */
 public class ConnectToFrame extends JFrame implements ActionListener {
     
-    private JLabel hostIPLabel = new JLabel("Host IP: ");
-    private JLabel hostPortLabel = new JLabel("Host port: ");
-    private JLabel nicknameLabel = new JLabel("Your nick: ");
-    private JTextField hostIPField = new JTextField();
-    private JTextField hostPortField = new JTextField();
-    private JTextField nicknameField = new JTextField();
-    private JButton okButton = new JButton("OK");
-    private JButton cancelButton = new JButton("Cancel");
+    private final JLabel hostIPLabel = new JLabel("Host IP: ");
+    private final JLabel nicknameLabel = new JLabel("Your nick: ");
+    private final JTextField hostIPField = new JTextField();
+    private final JTextField nicknameField = new JTextField();
+    private final JButton okButton = new JButton("OK");
+    private final JButton cancelButton = new JButton("Cancel");
+    private final GameFrame gameFrame;
 
-    public ConnectToFrame(String name){
+    public ConnectToFrame(String name, GameFrame gameFrame){
         super(name);
         this.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         this.setLayout(null);
         this.setVisible(false);
-        this.setSize(200,170);
+        this.setSize(200,150);
         this.setResizable(false);
 
         hostIPLabel.setBounds(10, 18, 50, 10);
         hostIPField.setBounds(75, 12, 100, 20);
-        hostPortLabel.setBounds(10, 43, 100, 15);
-        hostPortField.setBounds(75, 43, 100, 20);
-        nicknameLabel.setBounds(10, 73, 100, 15);
-        nicknameField.setBounds(75, 73, 100, 20);
-        okButton.setBounds(15, 103, 70, 30);
+        nicknameLabel.setBounds(10, 43, 100, 15);
+        nicknameField.setBounds(75, 43, 100, 20);
+        okButton.setBounds(15, 73, 70, 30);
         okButton.addActionListener(this);
-        cancelButton.setBounds(90, 103, 80, 30);
+        cancelButton.setBounds(90, 73, 80, 30);
         cancelButton.addActionListener(this);
 
         this.add(hostIPLabel);
         this.add(hostIPField);
-        this.add(hostPortLabel);
-        this.add(hostPortField);
         this.add(nicknameLabel);
         this.add(nicknameField);
         this.add(okButton);
         this.add(cancelButton);
+        
+        this.gameFrame = gameFrame;
     }
 
     /**
@@ -65,7 +57,8 @@ public class ConnectToFrame extends JFrame implements ActionListener {
      */
     public void actionPerformed(ActionEvent e) {
         if(e.getSource() == okButton){
-            ClientThread client = new ClientThread(hostIPField.getText(), Integer.parseInt(hostPortField.getText()), nicknameField.getText());
+            ClientThread client = new ClientThread(hostIPField.getText(), nicknameField.getText(), gameFrame);
+            new Thread(client).start();
             this.dispose();
         }
         if(e.getSource() == cancelButton) {

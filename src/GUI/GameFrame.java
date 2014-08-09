@@ -1,8 +1,3 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
-
 package GUI;
 
 import Game.Game;
@@ -31,9 +26,9 @@ public class GameFrame implements ActionListener{
     private final JMenuItem hostMenuItem;
     private final JMenuItem connectMenuItem;
     private final JMenuItem exitMenuItem;
-    private static JTextArea chatArea;
-    private static JScrollPane chatPane;
-    private static JButton[] buttons;
+    private final JTextArea chatArea;
+    private final JScrollPane chatPane;
+    private final JButton[] buttons;
     private JTextField chatInputField;
     private final JButton sendButton;
     private final JButton newGameButton;
@@ -122,8 +117,8 @@ public class GameFrame implements ActionListener{
         gameWindow.add(sendButton);
         gameWindow.add(newGameButton);
         
-        connectToFrame = new ConnectToFrame("Connect to Host");
-        hostFrame = new HostFrame("Host a game");
+        connectToFrame = new ConnectToFrame("Connect to Host", this);
+        hostFrame = new HostFrame("Host a game", this);
     }
 
     /**
@@ -191,24 +186,30 @@ public class GameFrame implements ActionListener{
         }
 
     }
-
-    /**
-     * Gets the frame text area
-     *
-     * @return The frame's text area
-     */
-    public static JTextArea getChatArea() {
-        return chatArea;
+    
+    public void updateChatArea(String newMessage) {
+        if(newMessage != null && !newMessage.equals("")) {
+            chatArea.append(newMessage);
+            chatArea.setCaretPosition(chatArea.getDocument().getLength());
+        }
     }
-
-    /**
-     * Gets the game
-     *
-     * @return The game's grid
-     */
-    public static JButton[] getButtons() {
-        return buttons;
+    
+    public void updateButtons(int buttonIndex, String updateValue) {
+        try {
+            if(updateValue != null && !updateValue.equals("")) {
+                buttons[buttonIndex].setText(updateValue);
+            }
+        } catch(ArrayIndexOutOfBoundsException e) {
+            //return
+        }
+    } 
+    
+    public void clearGrid() {
+        for(int i = 0; i < buttons.length; i++){
+            buttons[i].setText("");
+        }
     }
+    
     /**
      * Entry point for the program
      *
